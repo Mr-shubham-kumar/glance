@@ -1,0 +1,7 @@
+- type: hacker-news
+  title: Community pulse · HN
+  sort-by: best
+  extra-sort-by: engagement
+  limit: 4
+  collapse-after: 4
+  cache: 15m

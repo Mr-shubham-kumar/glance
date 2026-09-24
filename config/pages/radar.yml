@@ -1,0 +1,13 @@
+- name: RADAR
+  slug: radar
+  width: wide
+  columns:
+    - size: full
+      widgets:
+        - $include: ../widgets/radar-frontier.yml
+        - $include: ../widgets/radar-research.yml
+    - size: full
+      widgets:
+        - $include: ../widgets/radar-community.yml
+        - $include: ../widgets/radar-lobsters.yml
+        - $include: ../widgets/radar-releases.yml

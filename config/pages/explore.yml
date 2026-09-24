@@ -1,0 +1,11 @@
+- name: EXPLORE
+  slug: explore
+  width: wide
+  columns:
+    - size: full
+      widgets:
+        - $include: ../widgets/learning-videos.yml
+        - $include: ../widgets/longform.yml
+    - size: full
+      widgets:
+        - $include: ../widgets/explore-bookmarks.yml

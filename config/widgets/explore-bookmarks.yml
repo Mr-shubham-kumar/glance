@@ -1,0 +1,27 @@
+- type: bookmarks
+  title: Follow the thread
+  groups:
+    - title: Reading
+      hide-arrow: true
+      links:
+        - title: Simon Willison
+          url: https://simonwillison.net/
+        - title: Julia Evans
+          url: https://jvns.ca/
+        - title: selfh.st
+          url: https://selfh.st/
+        - title: Cloudflare engineering
+          url: https://blog.cloudflare.com/
+    - title: Discovery
+      hide-arrow: true
+      links:
+        - title: GitHub Trending
+          url: https://github.com/trending
+        - title: Hacker News
+          url: https://news.ycombinator.com/
+        - title: Lobsters
+          url: https://lobste.rs/
+        - title: arXiv
+          url: https://arxiv.org/
+        - title: Hugging Face
+          url: https://huggingface.co/

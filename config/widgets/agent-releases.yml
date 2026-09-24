@@ -1,0 +1,13 @@
+- type: releases
+  title: Agent + dashboard releases
+  cache: 2h
+  show-source-icon: true
+  limit: 6
+  collapse-after: 5
+  repositories:
+    - anomalyco/opencode
+    - openai/codex
+    - modelcontextprotocol/modelcontextprotocol
+    - OpenHands/OpenHands
+    - cline/cline
+    - glanceapp/glance

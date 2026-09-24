@@ -1,0 +1,22 @@
+- type: search
+  title: Search the frontier
+  hide-header: true
+  search-engine: duckduckgo
+  new-tab: true
+  placeholder: Search models, agents, infrastructure…
+  bangs:
+    - title: GitHub
+      shortcut: "!gh"
+      url: "https://github.com/search?q={QUERY}&type=repositories"
+    - title: Hacker News
+      shortcut: "!hn"
+      url: "https://hn.algolia.com/?q={QUERY}"
+    - title: YouTube
+      shortcut: "!yt"
+      url: "https://www.youtube.com/results?search_query={QUERY}"
+    - title: arXiv
+      shortcut: "!arxiv"
+      url: "https://arxiv.org/search/?query={QUERY}&searchtype=all"
+    - title: Lobsters
+      shortcut: "!lob"
+      url: "https://lobste.rs/search?q={QUERY}&what=stories&order=relevance"

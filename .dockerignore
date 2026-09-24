@@ -5,7 +5,9 @@
 # Only add necessary files to the Docker build context (Dockerfiles are always included implicitly)
 !/build/
 !/config/
-!/config/glance.yml
+!/config/**
+!/assets/
+!/assets/**
 !/internal/
 !/pkg/
 !/go.mod

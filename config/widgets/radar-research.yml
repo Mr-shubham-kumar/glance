@@ -1,0 +1,13 @@
+- type: rss
+  title: Early research · preprints
+  cache: 24h
+  limit: 4
+  collapse-after: 4
+  single-line-titles: true
+  feeds:
+    - url: https://rss.arxiv.org/rss/cs.AI
+      title: arXiv cs.AI
+      limit: 2
+    - url: https://rss.arxiv.org/rss/cs.SE
+      title: arXiv cs.SE
+      limit: 2

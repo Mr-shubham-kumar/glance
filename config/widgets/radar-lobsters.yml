@@ -1,0 +1,10 @@
+- type: lobsters
+  title: Community pulse · Lobsters
+  limit: 4
+  collapse-after: 4
+  cache: 15m
+  tags:
+    - ai
+    - programming
+    - devops
+    - linux

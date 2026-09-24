@@ -1,4 +1,6 @@
 /assets
+!/assets/
+!/assets/**
 /build
 /playground
 /.idea

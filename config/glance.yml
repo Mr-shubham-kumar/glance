@@ -1,13 +1,35 @@
+server:
+  assets-path: ./assets
+  proxied: true
+  port: 8080
+
+branding:
+  app-name: Signal Desk
+  logo-text: "S"
+  custom-footer: |
+    <p>Personal intelligence command surface · <a href="https://github.com/Mr-shubham-kumar/glance">source</a></p>
+
+theme:
+  background-color: 222 18 9
+  primary-color: 190 68 56
+  positive-color: 145 45 45
+  negative-color: 2 70 58
+  contrast-multiplier: 1.18
+  text-saturation-multiplier: 0.85
+  custom-css-file: /assets/user.css
+  presets:
+    default-light:
+      light: true
+      background-color: 220 25 95
+      primary-color: 205 72 36
+      positive-color: 145 50 35
+      negative-color: 2 65 45
+      contrast-multiplier: 1.08
+      text-saturation-multiplier: 0.9
+
 pages:
-  - name: Home
-    columns:
-      - size: small
-        widgets:
-          - type: calendar
-            first-day-of-week: monday
-      - size: full
-        widgets:
-          - type: hacker-news
-            limit: 10
-            collapse-after: 5
-            cache: 1h
+  - $include: pages/today.yml
+  - $include: pages/radar.yml
+  - $include: pages/build.yml
+  - $include: pages/systems.yml
+  - $include: pages/explore.yml

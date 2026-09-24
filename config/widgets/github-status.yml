@@ -1,0 +1,22 @@
+- type: custom-api
+  title: GitHub service status
+  title-url: https://www.githubstatus.com/
+  cache: 5m
+  url: https://www.githubstatus.com/api/v2/summary.json
+  template: |
+    {{ $indicator := .JSON.String "status.indicator" }}
+    {{ $incidents := .JSON.Array "incidents" }}
+    <div class="flex items-center gap-15">
+      <div class="grow min-width-0">
+        <a class="size-h4 color-highlight" href="https://www.githubstatus.com/" target="_blank" rel="noreferrer">GitHub</a>
+        <p class="color-subdue">{{ .JSON.String "status.description" }}</p>
+      </div>
+      <span class="{{ if eq $indicator "none" }}color-positive{{ else if eq $indicator "minor" }}color-highlight{{ else }}color-negative{{ end }}">{{ if eq $indicator "none" }}OK{{ else if eq $indicator "minor" }}DEGRADED{{ else }}INCIDENT{{ end }}</span>
+    </div>
+    {{ if gt (len $incidents) 0 }}
+    <ul class="list list-gap-8 margin-top-10">
+      {{ range $incidents }}
+      <li class="color-highlight text-truncate">{{ .String "name" }}</li>
+      {{ end }}
+    </ul>
+    {{ end }}

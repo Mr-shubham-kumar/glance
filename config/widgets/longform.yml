@@ -1,0 +1,25 @@
+- type: rss
+  title: Long-form & practical
+  cache: 12h
+  limit: 10
+  collapse-after: 5
+  single-line-titles: true
+  feeds:
+    - url: https://simonwillison.net/atom/everything/
+      title: Simon Willison
+      limit: 2
+    - url: https://jvns.ca/atom.xml
+      title: Julia Evans
+      limit: 2
+    - url: https://selfh.st/rss/
+      title: selfh.st
+      limit: 2
+    - url: https://www.servethehome.com/feed/
+      title: ServeTheHome
+      limit: 2
+    - url: https://blog.cloudflare.com/rss/
+      title: Cloudflare
+      limit: 1
+    - url: https://www.raspberrypi.com/feed/
+      title: Raspberry Pi
+      limit: 1

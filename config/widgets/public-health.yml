@@ -1,0 +1,21 @@
+- type: monitor
+  title: Endpoint reachability
+  cache: 5m
+  style: compact
+  sites:
+    - title: Glance
+      url: https://glance-9gmu.onrender.com/
+      check-url: https://glance-9gmu.onrender.com/api/healthz
+      timeout: 5s
+    - title: Render status
+      url: https://status.render.com/
+      timeout: 5s
+    - title: GitHub status
+      url: https://www.githubstatus.com/
+      timeout: 5s
+    - title: OpenAI status
+      url: https://status.openai.com/
+      timeout: 5s
+    - title: OCI status
+      url: https://ocistatus.oraclecloud.com/
+      timeout: 5s

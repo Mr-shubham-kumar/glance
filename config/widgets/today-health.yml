@@ -1,0 +1,9 @@
+- type: monitor
+  title: This deployment
+  cache: 5m
+  style: compact
+  sites:
+    - title: Glance
+      url: https://glance-9gmu.onrender.com/
+      check-url: https://glance-9gmu.onrender.com/api/healthz
+      timeout: 5s

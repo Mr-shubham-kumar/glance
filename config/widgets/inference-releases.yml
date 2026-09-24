@@ -1,0 +1,11 @@
+- type: releases
+  title: Inference + runtime releases
+  cache: 2h
+  show-source-icon: true
+  limit: 4
+  collapse-after: 4
+  repositories:
+    - ggml-org/llama.cpp
+    - ollama/ollama
+    - vllm-project/vllm
+    - huggingface/transformers

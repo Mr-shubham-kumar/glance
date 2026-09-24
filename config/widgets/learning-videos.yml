@@ -1,0 +1,33 @@
+- type: group
+  widgets:
+    - type: videos
+      title: AI demonstrations
+      style: grid-cards
+      channels:
+        - UCxBcwypKK-W3GHd_RZ9FZrQ
+        - UCbfYPyITQ-7l4upoX8nvctg
+      limit: 6
+      collapse-after-rows: 2
+      include-shorts: false
+      cache: 3h
+    - type: videos
+      title: Karpathy
+      style: grid-cards
+      channels:
+        - UCXUPKJO5MZQN11PqgIvyuvQ
+      limit: 3
+      collapse-after-rows: 2
+      include-shorts: false
+      cache: 3h
+    - type: videos
+      title: Hardware & systems
+      style: grid-cards
+      channels:
+        - UCR-DXc1voovS8nhAvccRZhg
+        - UCgdTVe88YVSrOZ9qKumhULQ
+        - UCOk-gHyjcWZNj3Br4oxwh0A
+        - UCHkYOD-3fZbuGhwsADBd9ZQ
+      limit: 8
+      collapse-after-rows: 2
+      include-shorts: false
+      cache: 3h

@@ -1,0 +1,3 @@
+- type: clock
+  hide-header: true
+  hour-format: 24h

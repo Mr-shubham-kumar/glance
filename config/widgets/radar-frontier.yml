@@ -1,0 +1,22 @@
+- type: rss
+  title: AI frontier · primary labs
+  cache: 2h
+  limit: 7
+  collapse-after: 4
+  single-line-titles: true
+  feeds:
+    - url: https://openai.com/news/rss.xml
+      title: OpenAI
+      limit: 1
+    - url: https://deepmind.google/blog/rss.xml
+      title: Google DeepMind
+      limit: 1
+    - url: https://research.google/blog/rss/
+      title: Google Research
+      limit: 1
+    - url: https://mistral.ai/news/rss
+      title: Mistral AI
+      limit: 2
+    - url: https://huggingface.co/blog/feed.xml
+      title: Hugging Face
+      limit: 2

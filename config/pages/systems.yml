@@ -1,0 +1,12 @@
+- name: SYSTEMS
+  slug: systems
+  width: default
+  columns:
+    - size: small
+      widgets:
+        - $include: ../widgets/public-health.yml
+        - $include: ../widgets/safe-links.yml
+    - size: full
+      widgets:
+        - $include: ../widgets/github-status.yml
+        - $include: ../widgets/infra-changes.yml

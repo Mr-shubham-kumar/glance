@@ -1,0 +1,19 @@
+- type: group
+  widgets:
+    - type: hacker-news
+      title: HN · best
+      sort-by: best
+      extra-sort-by: engagement
+      limit: 5
+      collapse-after: 4
+      cache: 15m
+    - type: lobsters
+      title: Lobsters · engineering
+      limit: 5
+      collapse-after: 4
+      cache: 15m
+      tags:
+        - ai
+        - programming
+        - devops
+        - linux

@@ -1,0 +1,23 @@
+- type: bookmarks
+  title: Build surface
+  groups:
+    - title: Active
+      hide-arrow: true
+      links:
+        - title: Glance repository
+          url: https://github.com/Mr-shubham-kumar/glance
+        - title: OpenCode
+          url: https://github.com/anomalyco/opencode
+        - title: Model Context Protocol
+          url: https://modelcontextprotocol.io/
+        - title: OCI console
+          url: https://cloud.oracle.com/
+    - title: Experiments
+      hide-arrow: true
+      links:
+        - title: skj-pi
+          url: https://github.com/Mr-shubham-kumar/skj-pi
+        - title: free-for-dev
+          url: https://github.com/Mr-shubham-kumar/free-for-dev
+        - title: OCI engineering
+          url: https://blogs.oracle.com/cloud-infrastructure/

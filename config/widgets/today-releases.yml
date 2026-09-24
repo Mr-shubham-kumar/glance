@@ -1,0 +1,13 @@
+- type: releases
+  title: Tool releases
+  cache: 2h
+  show-source-icon: true
+  limit: 5
+  collapse-after: 4
+  repositories:
+    - anomalyco/opencode
+    - openai/codex
+    - modelcontextprotocol/modelcontextprotocol
+    - glanceapp/glance
+    - ggml-org/llama.cpp
+    - vllm-project/vllm

@@ -1,0 +1,13 @@
+- name: BUILD
+  slug: build
+  width: wide
+  columns:
+    - size: full
+      widgets:
+        - $include: ../widgets/agent-releases.yml
+        - $include: ../widgets/inference-releases.yml
+        - $include: ../widgets/community-widgets.yml
+    - size: full
+      widgets:
+        - $include: ../widgets/build-notes.yml
+        - $include: ../widgets/experiment-links.yml

@@ -1,0 +1,16 @@
+- name: TODAY
+  slug: today
+  width: default
+  head-widgets:
+    - $include: ../widgets/search.yml
+    - $include: ../widgets/context.yml
+  columns:
+    - size: small
+      widgets:
+        - $include: ../widgets/build-links.yml
+        - $include: ../widgets/today-health.yml
+    - size: full
+      widgets:
+        - $include: ../widgets/signal-desk.yml
+        - $include: ../widgets/community-tabs.yml
+        - $include: ../widgets/today-releases.yml

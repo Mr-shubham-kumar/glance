@@ -1,0 +1,23 @@
+- type: bookmarks
+  title: Experiment queue
+  groups:
+    - title: Build
+      hide-arrow: true
+      links:
+        - title: OpenCode releases
+          url: https://github.com/anomalyco/opencode/releases
+        - title: MCP specification
+          url: https://github.com/modelcontextprotocol/modelcontextprotocol
+        - title: Hugging Face
+          url: https://huggingface.co/
+        - title: OCI engineering
+          url: https://blogs.oracle.com/cloud-infrastructure/
+    - title: Public experiments
+      hide-arrow: true
+      links:
+        - title: skj-pi
+          url: https://github.com/Mr-shubham-kumar/skj-pi
+        - title: free-for-dev
+          url: https://github.com/Mr-shubham-kumar/free-for-dev
+        - title: GitHub Trending
+          url: https://github.com/trending

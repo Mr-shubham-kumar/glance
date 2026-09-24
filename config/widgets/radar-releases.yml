@@ -1,0 +1,12 @@
+- type: releases
+  title: Open-source release radar
+  cache: 2h
+  show-source-icon: true
+  limit: 5
+  collapse-after: 4
+  repositories:
+    - anomalyco/opencode
+    - modelcontextprotocol/modelcontextprotocol
+    - ggml-org/llama.cpp
+    - huggingface/transformers
+    - vllm-project/vllm

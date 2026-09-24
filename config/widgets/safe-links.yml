@@ -1,0 +1,21 @@
+- type: bookmarks
+  title: Safe operations
+  groups:
+    - title: Status
+      hide-arrow: true
+      links:
+        - title: Render status
+          url: https://status.render.com/
+        - title: GitHub status
+          url: https://www.githubstatus.com/
+        - title: OpenAI status
+          url: https://status.openai.com/
+        - title: OCI status
+          url: https://ocistatus.oraclecloud.com/
+    - title: Public build
+      hide-arrow: true
+      links:
+        - title: Glance dashboard
+          url: https://glance-9gmu.onrender.com/
+        - title: Glance repository
+          url: https://github.com/Mr-shubham-kumar/glance
