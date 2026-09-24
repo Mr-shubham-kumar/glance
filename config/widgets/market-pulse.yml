@@ -1,0 +1,12 @@
+- type: markets
+  title: Market pulse
+  cache: 30m
+  chart-link-template: https://finance.yahoo.com/quote/{SYMBOL}/chart
+  symbol-link-template: https://finance.yahoo.com/quote/{SYMBOL}
+  markets:
+    - symbol: SPY
+      name: S&P 500
+    - symbol: BTC-USD
+      name: Bitcoin
+    - symbol: ETH-USD
+      name: Ethereum

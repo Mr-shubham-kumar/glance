@@ -9,5 +9,7 @@
     - size: full
       widgets:
         - $include: ../widgets/radar-community.yml
+        - $include: ../widgets/reddit-selfhosted.yml
+        - $include: ../widgets/github-trending.yml
         - $include: ../widgets/radar-lobsters.yml
         - $include: ../widgets/radar-releases.yml

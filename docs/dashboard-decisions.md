@@ -12,7 +12,7 @@ Signal Desk is a public-safe personal intelligence and command surface. It is de
 - What experiment could be worth trying next?
 - Are the public systems this dashboard depends on healthy?
 
-It is intentionally not a generic homelab inventory or a firehose of technology news.
+It is intentionally not a generic homelab inventory or a firehose of technology news. Requested secondary categories are isolated to bounded, low-priority surfaces rather than mixed into the decision feed.
 
 ## Technical baseline
 
@@ -49,11 +49,11 @@ Visible priorities are:
 3. A bounded public release surface for tools that can change the next experiment.
 4. A real self-health check for the deployed Glance endpoint.
 
-The page aims for fewer than roughly 15-20 visible content items before interaction. It does not guess a weather location and does not add markets, crypto, or generic news.
+The page aims for fewer than roughly 15-20 visible content items before interaction. It now includes a small actual market-pulse widget for explicitly requested market context; it does not guess a weather location, expose home telemetry, or turn secondary headlines into the primary signal.
 
 ### RADAR — triangulation surface
 
-RADAR separates early research, primary frontier announcements, community discovery, and open-source releases. The purpose is visual triangulation, not an automated correlation score. HN, Lobsters, arXiv, lab feeds, and releases are intentionally visible as different evidence types.
+RADAR separates early research, primary frontier announcements, community discovery, and open-source releases. The purpose is visual triangulation, not an automated correlation score. HN, Lobsters, Reddit's public r/selfhosted RSS, an explicitly unofficial GitHub Trending RSS, arXiv, lab feeds, and releases are intentionally visible as different evidence types.
 
 Research is limited to two small arXiv categories and labeled as preprints. No paper is described as peer-reviewed without independent evidence.
 
@@ -71,7 +71,7 @@ Home systems are not shown. No Raspberry Pi, router, tunnel, VPN, private hostna
 
 ### EXPLORE — learning surface
 
-EXPLORE is the relaxed discovery page. It uses seven verified YouTube channels with Shorts disabled, split into AI demonstrations and hardware/systems groups. It also carries a small long-form RSS surface and curated public bookmarks.
+EXPLORE is the relaxed discovery page. It uses seven verified YouTube channels with Shorts disabled, split into AI demonstrations and hardware/systems groups. It also carries a small long-form RSS surface, a bounded secondary AI feed, one headline each for markets/crypto/sports/culture, and curated public bookmarks.
 
 The channel set favors demonstrations, measured experiments, hardware work, and engineering explanations over rumor, daily model-ranking videos, or announcement narration.
 
@@ -113,14 +113,14 @@ The GitHub status widget is a small `custom-api` template based on the maintaine
 ## Parked and deliberately omitted
 
 - Native GitHub release and repository API widgets: parked after Render's shared egress exhausted the unauthenticated GitHub API quota. Public GitHub release/commit Atom feeds are used instead; no broad personal token is copied into Render.
-- Reddit widgets: parked because unauthenticated JSON requests are blocked from VPS-like egress and no existing app credentials were supplied.
-- GitHub trending widget: parked because the community widget's OSS Insight event-derived ranking currently reports itself unavailable; a GitHub Search replacement is too rate-limit fragile without a token.
-- Anthropic feed: parked because no suitable official RSS endpoint was verified; no third-party bridge is used.
-- OCI corporate blog RSS: parked after a public 403; OCI engineering remains available through public bookmarks, CNCF, and the OCI image-spec commit feed.
-- CIEchanow feed: removed after the latest observed entry was in 2024.
+- Native Reddit JSON widgets: parked because unauthenticated requests are blocked from VPS-like egress and no existing app credentials were supplied. A public r/selfhosted RSS feed is the bounded fallback.
+- GitHub Search and OSS Insight ranking: parked because their unauthenticated/event-derived paths are unavailable or rate-limit fragile. A clearly labeled unofficial daily RSS generator is used for discovery, with the official Trending page linked.
+- Anthropic feed: no suitable official RSS endpoint was verified; the official Newsroom is retained as a link-only fallback rather than using a third-party bridge.
+- OCI corporate blog RSS: public feed returned 403; the official OCI engineering page is retained as a link-only fallback alongside CNCF and OCI image-spec signals.
+- CIEchanow feed: removed after the latest observed entry was in 2024; no stale feed was reintroduced.
 - Weather: parked because no existing location configuration was present.
 - Home-lab telemetry: parked to avoid exposing a private network.
-- Markets, crypto, sports, games, media servers, memes, generic world news, and clickbait AI feeds: intentionally omitted.
+- Games, media servers, memes, generic world news, and clickbait feeds remain omitted. Markets, crypto, sports, and culture are present only as bounded optional headlines plus actual market data.
 
 ## Upgrade and maintenance rules
 
@@ -140,5 +140,7 @@ The GitHub status widget is a small `custom-api` template based on the maintaine
 - The stale CIEchanow feed and the WIP server-stats widget were removed.
 - The unauthenticated GitHub Search trend widget was removed instead of masking rate-limit errors.
 - The first live deploy proved that native GitHub release/repository widgets were not viable on Render's shared IP; bounded public release Atom feeds replaced them and the correction was re-deployed.
-- Reddit was parked instead of adding a proxy or exposing credentials.
+- Reddit was parked instead of adding a proxy or exposing credentials; the follow-up uses only the public r/selfhosted RSS endpoint and keeps native Reddit JSON parked.
+- The follow-up added an explicitly unofficial GitHub Trending RSS generator after official Search/OSS Insight paths were unavailable.
+- The follow-up added actual market data and bounded secondary headlines without adding decorative gauges, a scraper, or a new service.
 - The source inventory records point-in-time freshness; a feed that was healthy during implementation can still fail later and should be rechecked rather than assumed permanent.

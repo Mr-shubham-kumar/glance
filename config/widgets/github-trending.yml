@@ -1,0 +1,11 @@
+- type: rss
+  title: GitHub trending · unofficial daily
+  title-url: https://github.com/trending
+  cache: 6h
+  limit: 6
+  collapse-after: 4
+  single-line-titles: true
+  feeds:
+    - url: https://mshibanami.github.io/GitHubTrendingRSS/daily/all.xml
+      title: Daily trending
+      limit: 6

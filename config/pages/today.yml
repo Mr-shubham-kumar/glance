@@ -9,6 +9,7 @@
       widgets:
         - $include: ../widgets/build-links.yml
         - $include: ../widgets/today-health.yml
+        - $include: ../widgets/market-pulse.yml
     - size: full
       widgets:
         - $include: ../widgets/signal-desk.yml
