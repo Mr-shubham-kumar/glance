@@ -1,11 +1,19 @@
-- type: releases
+- type: rss
   title: Inference + runtime releases
   cache: 2h
-  show-source-icon: true
   limit: 4
   collapse-after: 4
-  repositories:
-    - ggml-org/llama.cpp
-    - ollama/ollama
-    - vllm-project/vllm
-    - huggingface/transformers
+  single-line-titles: true
+  feeds:
+    - url: https://github.com/ggml-org/llama.cpp/releases.atom
+      title: llama.cpp
+      limit: 1
+    - url: https://github.com/ollama/ollama/releases.atom
+      title: Ollama
+      limit: 1
+    - url: https://github.com/vllm-project/vllm/releases.atom
+      title: vLLM
+      limit: 1
+    - url: https://github.com/huggingface/transformers/releases.atom
+      title: Transformers
+      limit: 1

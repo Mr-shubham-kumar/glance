@@ -1,13 +1,25 @@
-- type: releases
+- type: rss
   title: Agent + dashboard releases
   cache: 2h
-  show-source-icon: true
   limit: 6
   collapse-after: 5
-  repositories:
-    - anomalyco/opencode
-    - openai/codex
-    - modelcontextprotocol/modelcontextprotocol
-    - OpenHands/OpenHands
-    - cline/cline
-    - glanceapp/glance
+  single-line-titles: true
+  feeds:
+    - url: https://github.com/anomalyco/opencode/releases.atom
+      title: OpenCode
+      limit: 1
+    - url: https://github.com/openai/codex/releases.atom
+      title: Codex
+      limit: 1
+    - url: https://github.com/modelcontextprotocol/modelcontextprotocol/releases.atom
+      title: MCP
+      limit: 1
+    - url: https://github.com/OpenHands/OpenHands/releases.atom
+      title: OpenHands
+      limit: 1
+    - url: https://github.com/cline/cline/releases.atom
+      title: Cline
+      limit: 1
+    - url: https://github.com/glanceapp/glance/releases.atom
+      title: Glance
+      limit: 1

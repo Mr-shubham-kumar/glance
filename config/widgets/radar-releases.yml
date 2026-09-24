@@ -1,12 +1,22 @@
-- type: releases
+- type: rss
   title: Open-source release radar
   cache: 2h
-  show-source-icon: true
   limit: 5
   collapse-after: 4
-  repositories:
-    - anomalyco/opencode
-    - modelcontextprotocol/modelcontextprotocol
-    - ggml-org/llama.cpp
-    - huggingface/transformers
-    - vllm-project/vllm
+  single-line-titles: true
+  feeds:
+    - url: https://github.com/anomalyco/opencode/releases.atom
+      title: OpenCode
+      limit: 1
+    - url: https://github.com/modelcontextprotocol/modelcontextprotocol/releases.atom
+      title: MCP
+      limit: 1
+    - url: https://github.com/ggml-org/llama.cpp/releases.atom
+      title: llama.cpp
+      limit: 1
+    - url: https://github.com/huggingface/transformers/releases.atom
+      title: Transformers
+      limit: 1
+    - url: https://github.com/vllm-project/vllm/releases.atom
+      title: vLLM
+      limit: 1

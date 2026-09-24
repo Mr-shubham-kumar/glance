@@ -1,13 +1,25 @@
-- type: releases
+- type: rss
   title: Tool releases
   cache: 2h
-  show-source-icon: true
-  limit: 5
+  limit: 6
   collapse-after: 4
-  repositories:
-    - anomalyco/opencode
-    - openai/codex
-    - modelcontextprotocol/modelcontextprotocol
-    - glanceapp/glance
-    - ggml-org/llama.cpp
-    - vllm-project/vllm
+  single-line-titles: true
+  feeds:
+    - url: https://github.com/anomalyco/opencode/releases.atom
+      title: OpenCode
+      limit: 1
+    - url: https://github.com/openai/codex/releases.atom
+      title: Codex
+      limit: 1
+    - url: https://github.com/modelcontextprotocol/modelcontextprotocol/releases.atom
+      title: MCP
+      limit: 1
+    - url: https://github.com/glanceapp/glance/releases.atom
+      title: Glance
+      limit: 1
+    - url: https://github.com/ggml-org/llama.cpp/releases.atom
+      title: llama.cpp
+      limit: 1
+    - url: https://github.com/vllm-project/vllm/releases.atom
+      title: vLLM
+      limit: 1

@@ -34,17 +34,17 @@ The following bounded candidate set was assessed before implementation. The deci
 | MCP blog | Primary protocol ecosystem | 5/4/4/3/5/5 | Active |
 | GitHub Changelog | Primary product changes | 4/5/4/3/5/5 | Active |
 | LangChain changelog RSS | Primary project changes | 4/4/3/3/5/5 | Active on BUILD |
-| OpenCode releases | Primary repository | 5/4/5/5/4/4 | Active |
-| OpenAI Codex releases | Primary repository | 5/5/5/4/4/4 | Active |
-| MCP specification releases | Primary repository | 5/5/4/4/4/4 | Active |
-| OpenHands releases | Primary repository | 4/4/4/4/4/4 | Active on BUILD |
-| Cline releases | Primary repository | 4/4/4/4/4/4 | Active on BUILD |
-| Glance releases | Primary repository | 5/5/5/5/4/4 | Active |
-| Glance community widgets repository | Primary project activity | 4/5/4/4/4/4 | Active as a repository widget |
-| llama.cpp releases | Primary repository | 5/4/5/4/4/4 | Active |
-| Ollama releases | Primary repository | 4/4/4/4/4/4 | Active on BUILD |
-| vLLM releases | Primary repository | 5/4/5/4/4/4 | Active |
-| Transformers releases | Primary repository | 5/4/4/4/4/4 | Active |
+| OpenCode release Atom | Primary repository | 5/4/5/5/5/5 | Active via public release feed |
+| OpenAI Codex release Atom | Primary repository | 5/5/5/4/5/5 | Active via public release feed |
+| MCP specification release Atom | Primary repository | 5/5/4/4/5/5 | Active via public release feed |
+| OpenHands release Atom | Primary repository | 4/4/4/4/5/5 | Active on BUILD via public release feed |
+| Cline release Atom | Primary repository | 4/4/4/4/5/5 | Active on BUILD via public release feed |
+| Glance release Atom | Primary repository | 5/5/5/5/5/5 | Active via public release feed |
+| Glance community widgets commit Atom | Primary project activity | 4/5/4/4/5/5 | Active as a public commit feed |
+| llama.cpp release Atom | Primary repository | 5/4/5/4/5/5 | Active via public release feed |
+| Ollama release Atom | Primary repository | 4/4/4/4/5/5 | Active on BUILD via public release feed |
+| vLLM release Atom | Primary repository | 5/4/5/4/5/5 | Active via public release feed |
+| Transformers release Atom | Primary repository | 5/4/4/4/5/5 | Active via public release feed |
 | Cloudflare blog RSS | Primary engineering | 5/5/4/4/5/5 | Active |
 | Kubernetes feed | Primary infrastructure | 4/5/3/3/5/5 | Active |
 | Tailscale blog RSS | Primary networking | 5/4/4/4/5/5 | Active |
@@ -88,9 +88,9 @@ The following bounded candidate set was assessed before implementation. The deci
 | Research | arXiv cs.SE | Early software-engineering and agent-evaluation signal | RSS | 24h; 2 items, 4 total | Preprints are not peer-reviewed |
 | Community | Hacker News best + engagement | Small discovery surface with ranking and discussion | Native HN group | 15m; 4-5 items | Popularity is a discovery signal, not evidence |
 | Community | Lobsters tagged engineering | Deeper discussion for AI, programming, DevOps, and Linux | Native Lobsters group | 15m; 4-5 items | Tag filtering can hide a relevant untagged post |
-| Open source | OpenCode, Codex, MCP, OpenHands, Cline | Release-level changes in coding-agent tooling | Native releases | 2h; 5-6 repositories per page | Unauthenticated GitHub core quota is shared |
-| Open source | Glance and community-widgets | Maintainer and ecosystem changes relevant to this deployment | Native releases/repository | 2h/6h; low visible limits | GitHub API rate limits; repository calls are public |
-| Inference | llama.cpp, Ollama, vLLM, Transformers | Meaningful runtime and model-tooling changes | Native releases | 2h; 4 repositories | Automated release cadence can be noisy |
+| Open source | OpenCode, Codex, MCP, OpenHands, Cline | Release-level changes in coding-agent tooling | Public GitHub release Atom feeds | 2h; 1 item per repository, 6 total | Atom feeds include release entries that the native API may classify as prereleases; web feed throttling |
+| Open source | Glance and community-widgets | Maintainer and ecosystem changes relevant to this deployment | Public Glance release Atom plus community commit Atom | 2h/6h; 1-3 items | Public web feeds can throttle; no API credential is required |
+| Inference | llama.cpp, Ollama, vLLM, Transformers | Meaningful runtime and model-tooling changes | Public GitHub release Atom feeds | 2h; 1 item per repository, 4 total | Automated release cadence can be noisy; release entries may be prereleases |
 | Systems | Cloudflare | High-signal production infrastructure and security engineering | RSS | 6h/12h; 1-2 items | Corporate publishing volume is capped |
 | Systems | Kubernetes | Primary cluster and platform engineering changes | RSS | 6h; 1 item | Release notes can be operational rather than conceptual |
 | Systems | Tailscale | Practical networking, identity, and infrastructure engineering | RSS | 6h/12h; 1-2 items | Blog cadence varies |
@@ -103,6 +103,8 @@ The following bounded candidate set was assessed before implementation. The deci
 | Health | GitHub status summary | Actual provider status indicator and unresolved incident names | Official community `custom-api` pattern | 5m | Provider API outage; isolated to one widget |
 | Health | Glance `/api/healthz` | Real deployed service reachability | Native monitor | 5m | Render cold start or public URL outage |
 | Reachability | Render, GitHub, OpenAI, OCI status pages | Confirms that public status pages are reachable; not a substitute for parsed incident state | Native monitor | 5m | A status page can return HTTP 200 during an incident, so the label is deliberately “reachability” |
+
+The first production deploy exposed a second-order constraint: Render's shared egress IP had exhausted GitHub's unauthenticated API quota, so native `releases` and `repository` widgets rendered errors even though their public GitHub web endpoints were healthy. They were replaced with the repository owners' public `releases.atom` and `commits/*.atom` feeds. This preserves primary release evidence without copying a broad personal token into a public Render service.
 
 ## Maintenance rules
 

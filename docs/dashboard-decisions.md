@@ -17,7 +17,7 @@ It is intentionally not a generic homelab inventory or a firehose of technology 
 ## Technical baseline
 
 - Project: stock Glance fork at `Mr-shubham-kumar/glance`; no migration to another dashboard.
-- Current source relationship at implementation start: `v0.8.6-5-g4131b11`, with the fork's Render build fixes on top of upstream v0.8.6.
+- Current source relationship: `v0.8.6-5-g4131b11` before the dashboard commit, with the fork's Render build fixes on top of upstream v0.8.6. The deployed dashboard commit is recorded below after final verification.
 - Deployment: Render web service, Docker runtime, free plan, Singapore region, branch `main`, auto-deploy on commits.
 - Public URL: https://glance-9gmu.onrender.com/
 - Health endpoint: https://glance-9gmu.onrender.com/api/healthz
@@ -36,7 +36,7 @@ Visible priorities are:
 
 1. A short validated-signal RSS surface using first-party lab, protocol, and maintainer sources.
 2. A tabbed HN/Lobsters discovery group with four-to-five items per source.
-3. A deduplicated release surface for tools that can change the next experiment.
+3. A bounded public release surface for tools that can change the next experiment.
 4. A real self-health check for the deployed Glance endpoint.
 
 The page aims for fewer than roughly 15-20 visible content items before interaction. It does not guess a weather location and does not add markets, crypto, or generic news.
@@ -49,7 +49,7 @@ Research is limited to two small arXiv categories and labeled as preprints. No p
 
 ### BUILD — experimentation surface
 
-BUILD is where release tracking and engineering changes meet a short experiment queue. It includes selected coding-agent projects, inference runtimes, the Glance community-widgets ecosystem, GitHub/Cloudflare/CNCF/Kubernetes/Tailscale changes, LangChain changes, and an OCI change signal.
+BUILD is where release tracking and engineering changes meet a short experiment queue. It includes selected coding-agent projects, inference runtimes, the Glance community-widgets commit stream, GitHub/Cloudflare/CNCF/Kubernetes/Tailscale changes, LangChain changes, and an OCI change signal.
 
 The experiment queue contains only public repositories and public cloud documentation. It is a navigation aid, not a task manager.
 
@@ -69,7 +69,7 @@ The channel set favors demonstrations, measured experiments, hardware work, and 
 
 - Primary sources validate important claims; community sources discover what to investigate.
 - A feed gets a per-feed limit even when the surrounding widget has a global limit.
-- Releases are more useful than commit firehoses, and release widgets are cached for two hours.
+- Releases are more useful than commit firehoses, and public release feeds are cached for two hours.
 - Slow independent blogs use 12-hour caches; research uses 24-hour caches; community and health surfaces use 5-15 minute caches.
 - The final pruning rule is explicit: if a widget would not be missed after disappearing for a month, remove it.
 - No score is fabricated from stars, votes, views, or keyword matching.
@@ -102,6 +102,7 @@ The GitHub status widget is a small `custom-api` template based on the maintaine
 
 ## Parked and deliberately omitted
 
+- Native GitHub release and repository API widgets: parked after Render's shared egress exhausted the unauthenticated GitHub API quota. Public GitHub release/commit Atom feeds are used instead; no broad personal token is copied into Render.
 - Reddit widgets: parked because unauthenticated JSON requests are blocked from VPS-like egress and no existing app credentials were supplied.
 - GitHub trending widget: parked because the community widget's OSS Insight event-derived ranking currently reports itself unavailable; a GitHub Search replacement is too rate-limit fragile without a token.
 - Anthropic feed: parked because no suitable official RSS endpoint was verified; no third-party bridge is used.
@@ -128,5 +129,6 @@ The GitHub status widget is a small `custom-api` template based on the maintaine
 - The legacy Mistral URL was replaced with `https://mistral.ai/news/rss`.
 - The stale CIEchanow feed and the WIP server-stats widget were removed.
 - The unauthenticated GitHub Search trend widget was removed instead of masking rate-limit errors.
+- The first live deploy proved that native GitHub release/repository widgets were not viable on Render's shared IP; bounded public release Atom feeds replaced them and the correction was re-deployed.
 - Reddit was parked instead of adding a proxy or exposing credentials.
 - The source inventory records point-in-time freshness; a feed that was healthy during implementation can still fail later and should be rechecked rather than assumed permanent.
