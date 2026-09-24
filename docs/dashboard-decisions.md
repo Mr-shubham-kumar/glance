@@ -26,6 +26,16 @@ It is intentionally not a generic homelab inventory or a firehose of technology 
 
 The exact deployed revision and final verification results are recorded after deployment rather than inferred from the health endpoint alone.
 
+## Deployment record
+
+- Verified implementation commit: `cae703bd6601b9de01ca9f7c30d15fbda3cd0179`
+- Verified Render deploy: `dep-daqne81srm7s73dntti0`, live on 2026-09-24
+- Public service: https://glance-9gmu.onrender.com/
+- Health check: `/api/healthz`
+- Production verification: TODAY, RADAR, BUILD, SYSTEMS, and EXPLORE each returned HTTP 200 with zero widget-error markers; CSS, manifest, navigation, release feeds, and YouTube content were present.
+- Desktop and mobile checks: headless Chrome at 1440px and 390px; native Glance responsive layout remained usable.
+- Upstream version: Glance `v0.8.6`; this fork is `v0.8.6-5-g4131b11` plus the dashboard commits. The Docker build leaves the runtime version string as `dev`, so the commit and deploy IDs are the authoritative build identifiers.
+
 ## Information architecture
 
 ### TODAY — decision surface
