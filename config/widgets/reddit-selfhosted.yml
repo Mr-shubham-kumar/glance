@@ -9,3 +9,6 @@
     - url: https://www.reddit.com/r/selfhosted/.rss
       title: r/selfhosted
       limit: 4
+      headers:
+        User-Agent: reddit-feed-reader/1.0
+        Accept: application/atom+xml
