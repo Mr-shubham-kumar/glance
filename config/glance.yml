@@ -1,0 +1,13 @@
+pages:
+  - name: Home
+    columns:
+      - size: small
+        widgets:
+          - type: calendar
+            first-day-of-week: monday
+      - size: full
+        widgets:
+          - type: hacker-news
+            limit: 10
+            collapse-after: 5
+            cache: 1h
