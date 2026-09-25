@@ -39,9 +39,9 @@
 .instance-deploy-history { border-top: 1px solid var(--color-widget-content-border); padding-top: 0.8rem; display: grid; gap: 0.4rem; }
 .instance-deploy-history p { overflow-wrap: anywhere; }
 
-/* Native hourly Open-Meteo widget composed within TODAY's clock frame. */
-.clock:has(.clock-weather-widget) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem); align-items: center; gap: 2rem; }
-.clock:has(.clock-weather-widget) > [data-local-time] { width: min(100%, 32rem); }
+/* Keep TODAY's date and forecast together without stretching across the page. */
+.head-widgets > .widget-type-clock:has(.clock-weather-widget) { width: 33.333%; }
+.clock:has(.clock-weather-widget) { display: grid; gap: 0.8rem; }
 .clock-weather-widget { margin: 0 !important; min-width: 0; }
 .clock-weather-widget .widget-header { margin-bottom: 0.4rem; }
 .clock-weather-widget .widget-content { padding: 0; border: 0; box-shadow: none; background: transparent; }
@@ -49,8 +49,12 @@
 .render-allowances { display: grid; gap: 0.5rem; }
 .render-allowances h2 { color: var(--color-primary); }
 
+@media (max-width: 1000px) {
+  .head-widgets > .widget-type-clock:has(.clock-weather-widget) { width: 50%; }
+}
+
 @media (max-width: 700px) {
-  .clock:has(.clock-weather-widget) { grid-template-columns: 1fr; gap: 0.8rem; }
+  .head-widgets > .widget-type-clock:has(.clock-weather-widget) { width: 100%; }
 }
 
 @media (max-width: 600px) {
