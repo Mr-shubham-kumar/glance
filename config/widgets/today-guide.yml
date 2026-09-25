@@ -1,0 +1,13 @@
+- type: html
+  title: Decide what to open
+  source: |
+    <div class="widget-content widget-content-frame"><p class="color-subdue" style="overflow-wrap:anywhere">This site is public: no personal mail or calendar data. <a href="/systems">SYSTEMS</a> · <a href="/build">BUILD</a> · <a href="/radar">RADAR</a> · <a href="/github">GITHUB</a> · <a href="/think">THINK</a></p></div>
+- type: bookmarks
+  title: Private actions · open at source
+  groups:
+    - title: Your own authenticated accounts
+      links:
+        - title: Calendar · inspect next appointment
+          url: https://calendar.google.com/calendar/u/0/r
+        - title: Gmail · check replies needed
+          url: https://mail.google.com/mail/u/0/#inbox

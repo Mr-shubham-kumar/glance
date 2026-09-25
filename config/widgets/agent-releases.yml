@@ -1,9 +1,10 @@
 - type: rss
-  title: Agent + dashboard releases
+  title: Agent + dashboard · source release notes
+  style: detailed-list
+  description-length: 390
   cache: 2h
   limit: 6
   collapse-after: 5
-  single-line-titles: true
   feeds:
     - url: https://github.com/anomalyco/opencode/releases.atom
       title: OpenCode

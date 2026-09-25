@@ -1,0 +1,10 @@
+- name: THINK
+  slug: think
+  width: wide
+  columns:
+    - size: full
+      widgets:
+        - $include: ../widgets/think-sources.yml
+    - size: full
+      widgets:
+        - $include: ../widgets/think-links.yml

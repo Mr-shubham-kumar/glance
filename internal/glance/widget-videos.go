@@ -163,6 +163,14 @@ func (w *videosWidget) fetchYoutubeChannelUploads(channelOrPlaylistIDs []string,
 
 		request, _ := http.NewRequest("GET", feedURL, nil)
 		response, err := decodeXmlFromRequest[youtubeFeedResponseXml](defaultHTTPClient, request)
+		// YouTube intermittently returns 404 for the uploads-only UULF playlist
+		// while the same channel's public Atom feed is healthy. Fall back to
+		// that feed rather than leaving a permanent red widget. The fallback
+		// cannot exclude Shorts; the normal uploads playlist still takes priority.
+		if err != nil && !includeShorts && strings.HasPrefix(id, "UC") {
+			fallback, _ := http.NewRequest("GET", "https://www.youtube.com/feeds/videos.xml?channel_id="+id, nil)
+			response, err = decodeXmlFromRequest[youtubeFeedResponseXml](defaultHTTPClient, fallback)
+		}
 		if err != nil {
 			cached, ok := w.cachedVideoLists.Load(id)
 			if ok {

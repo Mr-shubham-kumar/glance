@@ -1,0 +1,10 @@
+- name: GITHUB
+  slug: github
+  width: wide
+  columns:
+    - size: full
+      widgets:
+        - $include: ../widgets/github-investigate.yml
+    - size: full
+      widgets:
+        - $include: ../widgets/github-context.yml

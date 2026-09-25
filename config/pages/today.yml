@@ -7,11 +7,7 @@
   columns:
     - size: small
       widgets:
-        - $include: ../widgets/build-links.yml
-        - $include: ../widgets/today-health.yml
         - $include: ../widgets/market-pulse.yml
     - size: full
       widgets:
-        - $include: ../widgets/signal-desk.yml
-        - $include: ../widgets/community-tabs.yml
-        - $include: ../widgets/today-releases.yml
+        - $include: ../widgets/today-guide.yml

@@ -31,5 +31,7 @@ pages:
   - $include: pages/today.yml
   - $include: pages/radar.yml
   - $include: pages/build.yml
+  - $include: pages/github.yml
   - $include: pages/systems.yml
   - $include: pages/explore.yml
+  - $include: pages/think.yml

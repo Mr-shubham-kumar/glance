@@ -10,26 +10,5 @@
           url: https://jvns.ca/
         - title: selfh.st
           url: https://selfh.st/
-        - title: Cloudflare engineering
-          url: https://blog.cloudflare.com/
-        - title: Anthropic Newsroom
-          url: https://www.anthropic.com/news
         - title: The Batch
           url: https://www.deeplearning.ai/the-batch
-        - title: OCI engineering
-          url: https://blogs.oracle.com/cloud-infrastructure/
-    - title: Discovery
-      hide-arrow: true
-      links:
-        - title: GitHub Trending
-          url: https://github.com/trending
-        - title: Reddit r/selfhosted
-          url: https://www.reddit.com/r/selfhosted/
-        - title: Hacker News
-          url: https://news.ycombinator.com/
-        - title: Lobsters
-          url: https://lobste.rs/
-        - title: arXiv
-          url: https://arxiv.org/
-        - title: Hugging Face
-          url: https://huggingface.co/

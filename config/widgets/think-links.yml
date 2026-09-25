@@ -1,0 +1,15 @@
+- type: bookmarks
+  title: Attention & behavior · slower paths
+  groups:
+    - title: Deliberate reading
+      links:
+        - title: Behavioral Scientist · original research & practice
+          url: https://behavioralscientist.org/
+        - title: Experimental History · independent essays
+          url: https://www.experimental-history.com/
+        - title: Our World in Data · examine the underlying data
+          url: https://ourworldindata.org/
+- type: html
+  title: A reading prompt
+  source: |
+    <div class="widget-content widget-content-frame"><p class="color-subdue" style="overflow-wrap:anywhere">What changed your mind? Save the evidence in your private notes, not on this public dashboard.</p></div>

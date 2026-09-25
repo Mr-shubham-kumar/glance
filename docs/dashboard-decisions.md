@@ -1,5 +1,23 @@
 # Signal Desk dashboard decisions
 
+## Current architecture · v2 (2026-09-25)
+
+Real usage exposed overlapping TODAY/RADAR/BUILD/EXPLORE stories and broken YouTube uploads-only playlists. The seven-page ownership contract is in [content-ownership.md](content-ownership.md). This section supersedes the v1 descriptions below, retained only as deployment history.
+
+- TODAY is calm date/search, market context, safe links and authenticated-at-source Gmail/Calendar bookmarks; no private data or repeated feeds.
+- RADAR owns lab news, preprints and HN/Lobsters. The Reddit RSS fallback is parked after repeated 429s from Render.
+- BUILD owns detailed public GitHub release Atom entries (source-authored content, up to 390 characters; explicit no-notes notice when a tag has no notes), engineering changelogs and public experiments. No runtime summarization or GitHub API token.
+- GITHUB owns unofficial trending RSS in detailed form with official trending/topic cross-checks and verified-public repos. Ranking is a discovery lead only; starred momentum/creation-age correlation is not asserted without reliable evidence. API-based repository intelligence remains parked due shared-IP unauthenticated API quota.
+- SYSTEMS owns a live Glance health monitor and CPU/memory **container cgroup** history (request-driven, maximum 30 points over one hour, resets on instance sleep/deploy). Render's authenticated historical metrics API is **BLOCKED** pending a dedicated read-only credential and safe deployment decision; the local fallback is not misrepresented as Render's persisted historical data. Provider status and public links are subordinate.
+- EXPLORE owns YouTube demos and independent long-form essays. The uploads-only playlist returned 404 for otherwise-valid channels, so the native video widget now retries the channel Atom feed. That fallback can include Shorts. Non-tech headlines and repeated tech feeds removed.
+- THINK owns human-sciences evidence, books and deliberate attention/behavior links. Selection came from recurring private vault *topic classes* (attention/habits, reading/book-to-experiment, human sciences), not published private notes.
+
+**Privacy gate:** Render is publicly reachable with no Glance authentication. No personal mail, calendar entries, inferred actions or private vault text may appear. Gmail/Calendar data integration is **BLOCKED** until authenticated access and separately provisioned personal OAuth credentials exist; links navigate to the user's own authenticated Google session only. Work accounts explicitly excluded. No Render API token was copied from the CLI into the service. Public metrics endpoint emits aggregate container usage only. Free Docker plan in Singapore remains unchanged.
+
+**Source failures and parked work:** `/r/selfhosted/.rss` repeatedly returned 429 on Render and was removed. YouTube UULF 404 has a channel-feed fallback. `behavioralscientist.org/feed/` returns HTML, and `themarginalian.org/feed/` returned 403; both are link-only/parked. Unauthenticated GitHub API, Render historical metrics API without dedicated credential, authenticated personal actions, and private home telemetry remain parked/blocked respectively. No added runtime service, DB or new credentials.
+
+## Historical v1 record (superseded where inconsistent)
+
 Last reviewed: 2026-09-25
 
 ## Mission

@@ -1,0 +1,15 @@
+# Content ownership · Signal Desk v2
+
+Real-use feedback (2026-09-25): five pages repeatedly displayed the same source or story. A page now owns each content class; no global dedup service is needed.
+
+| Canonical page | Owns | Deliberately does not own |
+|---|---|---|
+| TODAY | Date/search, public instance summary, markets context, navigation to decisions | Releases, HN, lab news |
+| RADAR | Primary lab news, research preprints, HN/Lobsters discussion, self-hosting community | GitHub trending, releases, essays |
+| BUILD | Source-authored release-note excerpts, changelogs, experiment links | Trending ranking, lab news |
+| GITHUB | Unofficial trending repository discovery and public project links | Release-note cards |
+| SYSTEMS | The actual Render Glance container, live service reachability, provider incident context | General infrastructure news |
+| EXPLORE | Video demonstrations and long-form independent technical essays | Lab news, engineering changelogs |
+| THINK | Reading, human sciences, attention and behavioral research | Software and market headlines |
+
+Static bookmarks may point into another page's domain but no live feed is shared. Source partitioning is a substitute for global story dedup, not a guarantee against a publisher cross-posting the same URL. `scripts/audit-content.py` checks both configured feed URLs and live article links across pages; resolve new overlaps before deployment.

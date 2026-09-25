@@ -17,9 +17,6 @@
     - url: https://www.servethehome.com/feed/
       title: ServeTheHome
       limit: 2
-    - url: https://blog.cloudflare.com/rss/
-      title: Cloudflare
-      limit: 1
     - url: https://www.raspberrypi.com/feed/
       title: Raspberry Pi
       limit: 1

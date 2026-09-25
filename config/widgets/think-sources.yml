@@ -1,0 +1,22 @@
+- type: rss
+  title: Human sciences · evidence & uncertainty
+  style: detailed-list
+  cache: 12h
+  limit: 4
+  collapse-after: 4
+  feeds:
+    - url: https://ourworldindata.org/atom.xml
+      title: Our World in Data
+      limit: 2
+    - url: https://www.quantamagazine.org/feed/
+      title: Quanta
+      limit: 2
+- type: rss
+  title: Books & reading
+  style: detailed-list
+  cache: 12h
+  limit: 3
+  feeds:
+    - url: https://lithub.com/feed/
+      title: Literary Hub
+      limit: 3

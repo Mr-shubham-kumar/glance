@@ -4,9 +4,9 @@
   columns:
     - size: small
       widgets:
-        - $include: ../widgets/public-health.yml
+        - $include: ../widgets/today-health.yml
         - $include: ../widgets/safe-links.yml
     - size: full
       widgets:
+        - $include: ../widgets/instance-metrics.yml
         - $include: ../widgets/github-status.yml
-        - $include: ../widgets/infra-changes.yml

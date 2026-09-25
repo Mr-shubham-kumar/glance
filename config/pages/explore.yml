@@ -6,8 +6,6 @@
       widgets:
         - $include: ../widgets/learning-videos.yml
         - $include: ../widgets/longform.yml
-        - $include: ../widgets/ai-news.yml
-        - $include: ../widgets/optional-headlines.yml
     - size: full
       widgets:
         - $include: ../widgets/explore-bookmarks.yml

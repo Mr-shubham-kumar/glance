@@ -1,9 +1,10 @@
 - type: rss
-  title: Inference + runtime releases
+  title: Inference + runtime · source release notes
+  style: detailed-list
+  description-length: 350
   cache: 2h
   limit: 4
   collapse-after: 4
-  single-line-titles: true
   feeds:
     - url: https://github.com/ggml-org/llama.cpp/releases.atom
       title: llama.cpp

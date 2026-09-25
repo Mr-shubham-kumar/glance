@@ -1,5 +1,28 @@
 # Signal Desk source map
 
+## v2 active sources · canonical owners (2026-09-25)
+
+Prior candidate scores and v1 inventory below are historical; they do **not** describe current deployment. See [content-ownership.md](content-ownership.md). Cache values are server-side refresh intervals, not page reload rates.
+
+| Canonical page | Source / why | Mechanism; cache | Failure mode / fallback |
+|---|---|---|---|
+| TODAY | Local clock/search and public markets for immediate context; authenticated-at-source personal links | Native; markets 30m | Yahoo throttling; no private action contents |
+| RADAR | OpenAI, DeepMind, Google Research, Mistral, Hugging Face: first-party frontier; arXiv cs.AI/cs.SE: explicitly preprints | RSS; 2h / 24h | Feed changes, preprint noise; cap each |
+| RADAR | HN and Lobsters community discovery (not proof of claims) | Native; 15m | Popularity bias; limited to 4–5 each |
+| BUILD | OpenCode, Codex, MCP, OpenHands, Cline, Glance; llama.cpp, Ollama, vLLM, Transformers: source-authored release notes | GitHub releases.atom via detailed RSS; 2h | Empty body/prerelease noise; show no-notes rather than fabricate; API throttled on shared egress |
+| BUILD | GitHub changelog, Cloudflare, CNCF, Kubernetes, Tailscale, OCI image-spec, LangChain: engineering changes | RSS; 6h | Marketing and broad updates; bounded per feed |
+| GITHUB | Daily GitHub Trending RSS: discover public repositories with publisher-provided descriptions; official trending and topic links for checking claims | Unofficial RSS; 6h / static links | Generator outage/boilerplate description; no durable API metadata or invented scores |
+| SYSTEMS | Public Glance health and this container CPU/memory percent/limit/history | Native monitor 5m; cgroup custom-api 2m | Sleep/deploy resets samples; Linux cgroup unavailable -> explicit fallback |
+| SYSTEMS | GitHub incident summary and public Render account/status links | Status custom-api 5m; bookmarks | Third-party status can be delayed |
+| EXPLORE | Two Minute Papers, Latent Space, Karpathy, Jeff Geerling, Hardware Haven, Techno Tim, Lawrence Systems: demonstration | Native videos; 3h | UULF uploads-only 404 -> channel feed fallback can include Shorts |
+| EXPLORE | Julia Evans, Simon Willison, selfh.st, ServeTheHome, Raspberry Pi: slower essays | RSS; 12h | Low cadence and occasional feed failure |
+| THINK | Our World in Data (human science/data) and Quanta (research) | RSS; 12h | Subject mix; two items per source |
+| THINK | Literary Hub (books/reading), Behavioral Scientist and Experimental History (attention/behavior) | RSS 12h; links for latter two | Feeds unavailable or enormous; links avoid heavy polling |
+
+Parked v2: Reddit r/selfhosted RSS (Render 429), shared-IP GitHub API, The Marginalian feed (403), Behavioral Scientist feed (HTML), Render authenticated historical metrics (requires credential), Gmail/Calendar data (public privacy gate). No private note contents are published.
+
+## Historical v1 assessment (superseded)
+
 Checked: 2026-09-25
 
 This map records why public information appears in the dashboard. It is intentionally more selective than a feed directory. The deployed service is public-safe, so every active endpoint is public and no private repository, account, host, calendar, task list, or infrastructure identifier is shown.

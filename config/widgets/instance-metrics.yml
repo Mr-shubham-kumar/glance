@@ -1,0 +1,19 @@
+- type: custom-api
+  title: This Render container · live resources
+  title-url: https://dashboard.render.com/web/srv-da447tbncjis73b0shq0/metrics
+  url: http://127.0.0.1:8080/api/instance-metrics
+  cache: 2m
+  template: |
+    {{ if .JSON.Bool "available" }}
+    <div class="instance-stats">
+      <div><strong>CPU</strong> <span>{{ printf "%.1f" (.JSON.Float "cpuPercent") }}%</span> <small>of {{ printf "%.2f" (.JSON.Float "cpuLimitCores") }} allocated cores</small></div>
+      <svg viewBox="0 0 125 100" preserveAspectRatio="none" role="img" aria-label="Recent CPU percent samples">
+        {{ range $i, $s := .JSON.Array "samples" }}<rect x="{{ mul (toFloat $i) 4.0 }}" y="{{ sub 100.0 ($s.Float "cpu") }}" width="3" height="{{ $s.Float "cpu" }}" fill="currentColor" />{{ end }}
+      </svg>
+      <div><strong>Memory</strong> <span>{{ printf "%.0f" (.JSON.Float "memoryMiB") }} / {{ printf "%.0f" (.JSON.Float "memoryLimitMiB") }} MiB</span> <small>{{ printf "%.1f" (.JSON.Float "memoryPercent") }}%</small></div>
+      <svg viewBox="0 0 125 100" preserveAspectRatio="none" role="img" aria-label="Recent memory percent samples">
+        {{ range $i, $s := .JSON.Array "samples" }}<rect x="{{ mul (toFloat $i) 4.0 }}" y="{{ sub 100.0 ($s.Float "memory") }}" width="3" height="{{ $s.Float "memory" }}" fill="currentColor" />{{ end }}
+      </svg>
+      <p class="color-subdue">Up to 30 samples / 60 min; sampled when requested. History resets on sleep or deploy. <a href="https://dashboard.render.com/web/srv-da447tbncjis73b0shq0/metrics">Render metrics ↗</a></p>
+    </div>
+    {{ else }}<p class="color-subdue">Container metrics unavailable here. <a href="https://dashboard.render.com/web/srv-da447tbncjis73b0shq0/metrics">View Render metrics ↗</a></p>{{ end }}

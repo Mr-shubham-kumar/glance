@@ -29,15 +29,16 @@ var (
 var feedParser = gofeed.NewParser()
 
 type rssWidget struct {
-	widgetBase       `yaml:",inline"`
-	FeedRequests     []rssFeedRequest `yaml:"feeds"`
-	Style            string           `yaml:"style"`
-	ThumbnailHeight  float64          `yaml:"thumbnail-height"`
-	CardHeight       float64          `yaml:"card-height"`
-	Limit            int              `yaml:"limit"`
-	CollapseAfter    int              `yaml:"collapse-after"`
-	SingleLineTitles bool             `yaml:"single-line-titles"`
-	PreserveOrder    bool             `yaml:"preserve-order"`
+	widgetBase        `yaml:",inline"`
+	FeedRequests      []rssFeedRequest `yaml:"feeds"`
+	Style             string           `yaml:"style"`
+	ThumbnailHeight   float64          `yaml:"thumbnail-height"`
+	CardHeight        float64          `yaml:"card-height"`
+	Limit             int              `yaml:"limit"`
+	CollapseAfter     int              `yaml:"collapse-after"`
+	SingleLineTitles  bool             `yaml:"single-line-titles"`
+	DescriptionLength int              `yaml:"description-length"`
+	PreserveOrder     bool             `yaml:"preserve-order"`
 
 	Items          rssFeedItemList `yaml:"-"`
 	NoItemsMessage string          `yaml:"-"`
@@ -55,6 +56,9 @@ func (widget *rssWidget) initialize() error {
 
 	if widget.CollapseAfter == 0 || widget.CollapseAfter < -1 {
 		widget.CollapseAfter = 5
+	}
+	if widget.DescriptionLength <= 0 || widget.DescriptionLength > 600 {
+		widget.DescriptionLength = 200
 	}
 
 	if widget.ThumbnailHeight < 0 {
@@ -281,8 +285,17 @@ func (widget *rssWidget) fetchItemsFromFeedTask(request rssFeedRequest) ([]rssFe
 		}
 
 		if request.IsDetailed {
-			if !request.HideDescription && item.Description != "" && item.Title != "" {
-				rssItem.Description = shortenFeedDescriptionLen(item.Description, 200)
+			// GitHub release Atom puts the author-written notes in content,
+			// not summary/description. Never substitute a generated summary.
+			description := item.Description
+			if description == "" {
+				description = item.Content
+			}
+			if !request.HideDescription && description != "" && item.Title != "" {
+				rssItem.Description = shortenFeedDescriptionLen(description, widget.DescriptionLength)
+				if strings.HasSuffix(request.URL, "/releases.atom") && releaseTagOnlyPattern.MatchString(strings.TrimSpace(rssItem.Description)) {
+					rssItem.Description = "No substantive release notes provided by the maintainer."
+				}
 			}
 
 			if !request.HideCategories {
@@ -392,6 +405,8 @@ func recursiveFindThumbnailInExtensions(extensions map[string][]gofeedext.Extens
 	return ""
 }
 
+var releaseTagOnlyPattern = regexp.MustCompile(`(?i)^(?:release:?\s*)?v?[0-9][a-z0-9.\-_+]*$`)
+
 var htmlTagsWithAttributesPattern = regexp.MustCompile(`<\/?[a-zA-Z0-9-]+ *(?:[a-zA-Z-]+=(?:"|').*?(?:"|') ?)* *\/?>`)
 
 func sanitizeFeedDescription(description string) string {
@@ -399,18 +414,20 @@ func sanitizeFeedDescription(description string) string {
 		return ""
 	}
 
+	// Some RSS generators HTML-encode a README twice. Unescape before
+	// stripping tags so truncated snippets never expose raw markup.
+	description = html.UnescapeString(html.UnescapeString(description))
 	description = strings.ReplaceAll(description, "\n", " ")
-	description = htmlTagsWithAttributesPattern.ReplaceAllString(description, "")
+	description = htmlTagsWithAttributesPattern.ReplaceAllString(description, " ")
 	description = sequentialWhitespacePattern.ReplaceAllString(description, " ")
 	description = strings.TrimSpace(description)
-	description = html.UnescapeString(description)
 
 	return description
 }
 
 func shortenFeedDescriptionLen(description string, maxLen int) string {
-	description, _ = limitStringLength(description, 1000)
 	description = sanitizeFeedDescription(description)
+	description, _ = limitStringLength(description, 1000)
 	description, limited := limitStringLength(description, maxLen)
 
 	if limited {
