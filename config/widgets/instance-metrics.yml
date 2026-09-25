@@ -6,7 +6,7 @@
   template: |
     {{ if .JSON.Bool "available" }}
     <div class="instance-stats" data-revision="{{ .JSON.String "revision" }}" data-snapshot-at="{{ .JSON.String "observedAt" }}" data-cpu-percent="{{ .JSON.Float "cpuPercent" }}" data-cpu-ready="{{ .JSON.Bool "cpuReady" }}" data-memory-mib="{{ .JSON.Float "memoryMiB" }}">
-      <p class="color-subdue">Current container · snapshot {{ .JSON.String "observedAt" | parseTime "rfc3339" | toRelativeTime }} · refresh when you return to this tab</p>
+      <p class="color-subdue">Current container · snapshot <span {{ .JSON.String "observedAt" | parseTime "rfc3339" | toRelativeTime }}></span> ago · refresh when you return to this tab</p>
       <div class="instance-metric"><div class="instance-metric-heading"><strong>CPU</strong><span>{{ if .JSON.Bool "cpuReady" }}{{ printf "%.1f" (.JSON.Float "cpuPercent") }}% used · {{ printf "%.1f" (.JSON.Float "cpuHeadroomPercent") }}% available{{ else }}Measuring · first interval pending{{ end }}</span></div>
       <small>Share of {{ printf "%.2f" (.JSON.Float "cpuLimitCores") }} cores observed in this container's cgroup (not a billing balance).</small>
       {{ if .JSON.Bool "cpuReady" }}<div class="instance-meter" role="img" aria-label="CPU share used"><div style="width:{{ printf "%.1f" (.JSON.Float "cpuPercent") }}%"></div></div>{{ end }}
@@ -21,7 +21,7 @@
       </svg></div>
       <p class="instance-timescale">← 60 min ago <span>now →</span></p>
       <div class="instance-deploy"><strong>Running revision</strong> {{ if ne (.JSON.String "revision") "unavailable" }}<a href="https://github.com/Mr-shubham-kumar/glance/commit/{{ .JSON.String "revision" }}">{{ printf "%.8s" (.JSON.String "revision") }} ↗</a>{{ else }}Not supplied by Render{{ end }}<br>
-      <strong>Started</strong> {{ .JSON.String "startedAt" | parseTime "rfc3339" | toRelativeTime }} · {{ .JSON.Int "uptimeMinutes" }} minutes up<br>
+      <strong>Started</strong> <span {{ .JSON.String "startedAt" | parseTime "rfc3339" | toRelativeTime }}></span> ago · {{ .JSON.Int "uptimeMinutes" }} minutes up<br>
       <strong>Page loads</strong> {{ .JSON.Int "pageContentLoads" }} since start · {{ .JSON.Int "pageContentFailures" }} render failures (not total Render traffic)</div>
       <p class="color-subdue">Samples only when visited; a sleep/deploy resets server history. This measures only this running container, not the workspace.</p>
       <div id="observed-deployments" class="instance-deploy-history"></div>
