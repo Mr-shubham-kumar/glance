@@ -571,16 +571,6 @@ function zoneDiffText(diffInMinutes) {
     return { text: `${sign}${hours}h~`, title: `${hours} hour${hourSuffix} and ${minutes} minutes ${signText}` };
 }
 
-function attachWeatherToClock() {
-    // Keep Glance's native weather fetching/cache/template, but compose its
-    // already-rendered card inside TODAY's clock rather than beside it.
-    const clock = document.querySelector('.widget-type-clock .clock');
-    const forecast = document.querySelector('.head-widgets > .widget-type-weather');
-    if (!clock || !forecast) return;
-    forecast.classList.add('clock-weather-widget');
-    clock.append(forecast);
-}
-
 function setupClocks() {
     const clocks = document.getElementsByClassName('clock');
 
@@ -878,7 +868,6 @@ async function setupPage() {
 
     try {
         setupPopovers();
-        attachWeatherToClock();
         setupClocks()
         await setupCalendars();
         await setupTodos();

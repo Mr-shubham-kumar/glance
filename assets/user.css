@@ -39,23 +39,8 @@
 .instance-deploy-history { border-top: 1px solid var(--color-widget-content-border); padding-top: 0.8rem; display: grid; gap: 0.4rem; }
 .instance-deploy-history p { overflow-wrap: anywhere; }
 
-/* Keep TODAY's date and forecast together without stretching across the page. */
-.head-widgets > .widget-type-clock:has(.clock-weather-widget) { width: 33.333%; }
-.clock:has(.clock-weather-widget) { display: grid; gap: 0.8rem; }
-.clock-weather-widget { margin: 0 !important; min-width: 0; }
-.clock-weather-widget .widget-header { margin-bottom: 0.4rem; }
-.clock-weather-widget .widget-content { padding: 0; border: 0; box-shadow: none; background: transparent; }
-
 .render-allowances { display: grid; gap: 0.5rem; }
 .render-allowances h2 { color: var(--color-primary); }
-
-@media (max-width: 1000px) {
-  .head-widgets > .widget-type-clock:has(.clock-weather-widget) { width: 50%; }
-}
-
-@media (max-width: 700px) {
-  .head-widgets > .widget-type-clock:has(.clock-weather-widget) { width: 100%; }
-}
 
 @media (max-width: 600px) {
   .page-content {

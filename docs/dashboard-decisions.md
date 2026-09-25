@@ -3,7 +3,7 @@
 ## Current iteration · v4 (2026-09-25)
 
 - GITHUB: four explicit first-party Trending navigation links for All, Go, Python and TypeScript, plus four bounded unofficial RSS feeds; each feed's source label goes to its matching official category via `channel-url` and article titles still go to repositories. The header is explicitly the All-category link.
-- TODAY: native Open-Meteo forecast for New Delhi, India is rendered **inside the clock DOM** by composing Glance's weather widget on each fragment load; New Delhi is a stated fallback, not inferred visitor location. No browser geolocation permission, IP location, server retention or extra credentials. The existing Google bookmarks use the native card style, with Gmail, Calendar, Tasks, and Drive links only; private contents remain unavailable on this public dashboard.
+- TODAY: the user removed the weather integration after trying it. The native clock displays date and time only; no weather widget, geolocation, or weather fetch is configured. The existing Google bookmarks use the native card style, with Gmail, Calendar, Tasks, and Drive links only; private contents remain unavailable on this public dashboard.
 - COMMUNITY: new page for original Substack essays (Experimental History and Construction Physics) and direct Reddit subreddit links. r/selfhosted RSS briefly worked on the first Render deploy but returned 429 after the next deploy, leaving a red error card; it is PARKED with an explicit on-page notice and no third-party proxy or stale cached posts. Live Reddit content remains blocked by shared egress; Substack articles are owned here rather than THINK.
 
 ## Previous iteration · v3 (2026-09-25)

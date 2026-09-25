@@ -1,6 +1,6 @@
 # Content ownership · Signal Desk
 
-v4: COMMUNITY is the canonical home for Reddit community links and Substack essays. TODAY has New Delhi weather in its clock (no location permission or tracking) and bookmark-style authenticated account links. GITHUB has four explicit official category destinations and a separately labeled unofficial RSS feed; article links still lead to repositories. Reddit RSS was tried in production: it succeeded once, then returned 429 from Render's shared egress after a deploy, so the live feed is PARKED and only direct Reddit links remain. No proxy or stale copied posts.
+v4: COMMUNITY is the canonical home for Reddit community links and Substack essays. TODAY has a date/time-only clock and bookmark-style authenticated account links; the forecast was removed at the user's request. GITHUB has four explicit official category destinations and a separately labeled unofficial RSS feed; article links still lead to repositories. Reddit RSS was tried in production: it succeeded once, then returned 429 from Render's shared egress after a deploy, so the live feed is PARKED and only direct Reddit links remain. No proxy or stale copied posts.
 
 Real-use feedback (2026-09-25): five pages repeatedly displayed the same source or story. A page now owns each content class; no global dedup service is needed.
 
