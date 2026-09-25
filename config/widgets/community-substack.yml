@@ -1,0 +1,14 @@
+- type: rss
+  title: Substack · essays worth reading
+  style: detailed-list
+  description-length: 280
+  cache: 12h
+  limit: 4
+  collapse-after: 4
+  feeds:
+    - url: https://www.experimental-history.com/feed
+      title: Experimental History · behavior & science
+      limit: 2
+    - url: https://www.construction-physics.com/feed
+      title: Construction Physics · materials & systems
+      limit: 2

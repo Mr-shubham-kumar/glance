@@ -1,10 +1,18 @@
 - type: bookmarks
   title: Investigate · confirm before adopting
   groups:
+    - title: Official trending · daily
+      links:
+        - title: Official trending · all
+          url: https://github.com/trending
+        - title: Official trending · Go
+          url: https://github.com/trending/go?since=daily
+        - title: Official trending · Python
+          url: https://github.com/trending/python?since=daily
+        - title: Official trending · TypeScript
+          url: https://github.com/trending/typescript?since=daily
     - title: Discovery paths
       links:
-        - title: Official GitHub trending · compare with unofficial feed
-          url: https://github.com/trending
         - title: AI agent repositories
           url: https://github.com/topics/ai-agent
         - title: Self-hosted repositories

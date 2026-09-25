@@ -136,6 +136,7 @@ type rssFeedItem struct {
 type rssFeedRequest struct {
 	URL                 string            `yaml:"url"`
 	Title               string            `yaml:"title"`
+	ChannelURL          string            `yaml:"channel-url"`
 	HideCategories      bool              `yaml:"hide-categories"`
 	HideDescription     bool              `yaml:"hide-description"`
 	Limit               int               `yaml:"limit"`
@@ -264,6 +265,9 @@ func (widget *rssWidget) fetchItemsFromFeedTask(request rssFeedRequest) ([]rssFe
 
 		rssItem := rssFeedItem{
 			ChannelURL: feed.Link,
+		}
+		if request.ChannelURL != "" {
+			rssItem.ChannelURL = request.ChannelURL
 		}
 
 		if request.ItemLinkPrefix != "" {
@@ -433,6 +437,7 @@ var prereleaseTitlePattern = regexp.MustCompile(`(?i)(?:^|[.-])(?:alpha|beta|rc|
 var releaseTagOnlyPattern = regexp.MustCompile(`(?i)^(?:release:?\s*)?v?[0-9][a-z0-9.\-_+]*$`)
 
 var htmlTagsWithAttributesPattern = regexp.MustCompile(`<\/?[a-zA-Z0-9-]+ *(?:[a-zA-Z-]+=(?:"|').*?(?:"|') ?)* *\/?>`)
+var htmlCommentPattern = regexp.MustCompile(`(?s)<!--.*?-->`)
 
 func sanitizeFeedDescription(description string) string {
 	if description == "" {
@@ -442,6 +447,7 @@ func sanitizeFeedDescription(description string) string {
 	// Some RSS generators HTML-encode a README twice. Unescape before
 	// stripping tags so truncated snippets never expose raw markup.
 	description = html.UnescapeString(html.UnescapeString(description))
+	description = htmlCommentPattern.ReplaceAllString(description, " ")
 	description = strings.ReplaceAll(description, "\n", " ")
 	description = htmlTagsWithAttributesPattern.ReplaceAllString(description, " ")
 	description = sequentialWhitespacePattern.ReplaceAllString(description, " ")

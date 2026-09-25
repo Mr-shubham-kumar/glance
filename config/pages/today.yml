@@ -4,6 +4,7 @@
   head-widgets:
     - $include: ../widgets/search.yml
     - $include: ../widgets/context.yml
+    - $include: ../widgets/today-weather.yml
   columns:
     - size: small
       widgets:

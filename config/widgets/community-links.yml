@@ -1,0 +1,10 @@
+- type: bookmarks
+  title: Reddit · open at source
+  groups:
+    - links:
+        - title: r/selfhosted · practical hosting
+          url: https://www.reddit.com/r/selfhosted/
+        - title: r/ObsidianMD · knowledge workflows
+          url: https://www.reddit.com/r/ObsidianMD/
+        - title: r/LocalLLaMA · model experiments
+          url: https://www.reddit.com/r/LocalLLaMA/

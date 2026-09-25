@@ -1,11 +1,17 @@
 # Signal Desk source map
 
+## v4 additions · 2026-09-25
+
+- TODAY includes Glance's native Open-Meteo hourly weather for **New Delhi, India** as the expressly requested fallback, composed in the clock frame by the browser. This does not request the visitor's geolocation or infer it from IP. Account links are bookmarks only; no Google account content is fetched.
+- GITHUB's unofficial RSS generator now has All/Go/Python/TypeScript feeds (2 each, 12h cache) and each source label points to the corresponding **official** Trending category via `channel-url`. A native bookmarks panel provides direct official navigation even if the feed is empty. Article titles still point to the repository, not the filter.
+- COMMUNITY owns public Reddit r/selfhosted RSS (12h, four entries; shared Render egress may rate-limit with 429) and original Substack essays from Experimental History and Construction Physics (12h; two items each). THINK no longer links Experimental History. Reddit community bookmarks remain functional if RSS is blocked; do not add a third-party proxy or present a link as fetched content. Neither source uses credentials or personal account data.
+
 ## v3 source changes · 2026-09-25
 
 - TODAY and SYSTEMS share **only** the local `GET /api/instance-metrics` endpoint: 5m compact summary versus 2m full cgroup card; no upstream credential, server history is request-driven and resets on sleep/deploy. Browser-local observed revision maxima can persist across deployments on the same device, but are not true peaks. Workspace allowances are *static documented context*, not fetched balances; authenticated Billing/Metrics/Deploys links are navigation only. See [render-resources.md](render-resources.md).
-- GITHUB partitions the same unofficial publisher's daily RSS into `all.xml` (3), `go.xml` (2), `python.xml` (2). Cache 12h, native URL dedup. The extra category feeds are not independent confirmation; failure mode: generator outage or README-heavy descriptions. No API credentials or guessed momentum scores.
+- GITHUB partitions the same unofficial publisher's daily RSS into `all.xml` (3), `go.xml` (2), `python.xml` (2). Cache 12h, native URL dedup (v3 state; see v4 above). The extra category feeds are not independent confirmation; failure mode: generator outage or README-heavy descriptions. No API credentials or guessed momentum scores.
 - BUILD's GitHub releases.atom feeds remain 2h and 1 per repo, but now prefer substantive stable notes over tag-only/alpha/beta/RC entries; a stable tag without notes is fallback, not made-up prose. The source may publish no new stable release for weeks.
-- No other live sources added. Render plan data is explicitly separated from actual container measurements and monthly workspace balances. When visiting a background tab after ten minutes, the browser refreshes its page fragment via Glance's usual bounded widget cache, not by polling feeds continuously.
+- No other live sources added in v3. Render plan data is explicitly separated from actual container measurements and monthly workspace balances. When visiting a background tab after ten minutes, the browser refreshes its page fragment via Glance's usual bounded widget cache, not by polling feeds continuously.
 
 ## v2 historical inventory (superseded by v3 deltas above)
 

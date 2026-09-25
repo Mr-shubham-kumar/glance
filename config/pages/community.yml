@@ -1,0 +1,11 @@
+- name: COMMUNITY
+  slug: community
+  width: wide
+  columns:
+    - size: full
+      widgets:
+        - $include: ../widgets/community-reddit.yml
+        - $include: ../widgets/community-links.yml
+    - size: full
+      widgets:
+        - $include: ../widgets/community-substack.yml

@@ -1,0 +1,15 @@
+- type: rss
+  title: Reddit · r/selfhosted (public feed)
+  title-url: https://www.reddit.com/r/selfhosted/
+  cache: 12h
+  style: detailed-list
+  description-length: 170
+  limit: 4
+  collapse-after: 4
+  feeds:
+    - url: https://www.reddit.com/r/selfhosted/.rss?limit=10
+      title: r/selfhosted
+      channel-url: https://www.reddit.com/r/selfhosted/
+      limit: 4
+      headers:
+        User-Agent: SignalDeskPublicRSS/1.0 (+https://glance-9gmu.onrender.com/)

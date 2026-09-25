@@ -35,3 +35,4 @@ pages:
   - $include: pages/systems.yml
   - $include: pages/explore.yml
   - $include: pages/think.yml
+  - $include: pages/community.yml

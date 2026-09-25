@@ -840,6 +840,7 @@ An array of RSS/atom feeds. The title can optionally be changed.
 | ---- | ---- | -------- | ------- | ----- |
 | url | string | yes | | |
 | title | string | no | the title provided by the feed | |
+| channel-url | string | no | the channel URL provided by the feed | Override the destination of the feed's source label; article links are unchanged |
 | hide-categories | boolean | no | false | Only applicable for `detailed-list` style |
 | hide-description | boolean | no | false | Only applicable for `detailed-list` style |
 | limit | integer | no | | |
@@ -848,6 +849,9 @@ An array of RSS/atom feeds. The title can optionally be changed.
 
 ###### `limit`
 The maximum number of articles to show from that specific feed. Useful if you have a feed which posts a lot of articles frequently and you want to prevent it from excessively pushing down articles from other feeds.
+
+###### `channel-url`
+Set the destination of the clickable source label in a feed item (for example, the official GitHub Trending language category when entries come from an unofficial RSS generator). This does not change the article's link or the RSS request URL.
 
 ###### `item-link-prefix`
 If an RSS feed isn't returning item links with a base domain and Glance has failed to automatically detect the correct domain you can manually add a prefix to each link with this property.

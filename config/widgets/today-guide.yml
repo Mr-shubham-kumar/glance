@@ -1,13 +1,16 @@
 - type: html
   title: Decide what to open
   source: |
-    <div class="widget-content widget-content-frame"><p class="color-subdue" style="overflow-wrap:anywhere">This site is public: no personal mail or calendar data. <a href="/systems">SYSTEMS</a> · <a href="/build">BUILD</a> · <a href="/radar">RADAR</a> · <a href="/github">GITHUB</a> · <a href="/think">THINK</a></p><p id="local-visit-context" class="color-subdue margin-top-10" aria-label="Recently visited sections"></p></div>
+    <div class="widget-content widget-content-frame"><p class="color-subdue" style="overflow-wrap:anywhere">This site is public: no personal mail or calendar data. <a href="/systems">SYSTEMS</a> · <a href="/build">BUILD</a> · <a href="/radar">RADAR</a> · <a href="/github">GITHUB</a> · <a href="/think">THINK</a> · <a href="/community">COMMUNITY</a></p><p id="local-visit-context" class="color-subdue margin-top-10" aria-label="Recently visited sections"></p></div>
 - type: bookmarks
-  title: Private actions · open at source
+  title: Your own authenticated accounts
   groups:
-    - title: Your own authenticated accounts
-      links:
-        - title: Calendar · inspect next appointment
-          url: https://calendar.google.com/calendar/u/0/r
+    - links:
         - title: Gmail · check replies needed
           url: https://mail.google.com/mail/u/0/#inbox
+        - title: Calendar · inspect next appointment
+          url: https://calendar.google.com/calendar/u/0/r
+        - title: Google Tasks · review commitments
+          url: https://tasks.google.com/
+        - title: Google Drive · open personal files
+          url: https://drive.google.com/drive/u/0/my-drive

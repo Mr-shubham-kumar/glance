@@ -1,18 +1,25 @@
 - type: rss
-  title: Trending · all / Go / Python (unofficial)
+  title: Trending · all (unofficial feed)
   title-url: https://github.com/trending
   style: detailed-list
   description-length: 220
   cache: 12h
-  limit: 7
+  limit: 8
   collapse-after: 5
   feeds:
     - url: https://mshibanami.github.io/GitHubTrendingRSS/daily/all.xml
       title: All languages
-      limit: 3
+      channel-url: https://github.com/trending
+      limit: 2
     - url: https://mshibanami.github.io/GitHubTrendingRSS/daily/go.xml
       title: Go
+      channel-url: https://github.com/trending/go?since=daily
       limit: 2
     - url: https://mshibanami.github.io/GitHubTrendingRSS/daily/python.xml
       title: Python
+      channel-url: https://github.com/trending/python?since=daily
+      limit: 2
+    - url: https://mshibanami.github.io/GitHubTrendingRSS/daily/typescript.xml
+      title: TypeScript
+      channel-url: https://github.com/trending/typescript?since=daily
       limit: 2
