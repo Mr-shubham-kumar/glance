@@ -1,0 +1,10 @@
+- type: custom-api
+  title: At a glance · your deployment
+  title-url: https://glance-9gmu.onrender.com/systems
+  url: http://127.0.0.1:8080/api/instance-metrics
+  cache: 5m
+  template: |
+    {{ if .JSON.Bool "available" }}<div data-revision="{{ .JSON.String "revision" }}" data-snapshot-at="{{ .JSON.String "observedAt" }}" data-cpu-percent="{{ .JSON.Float "cpuPercent" }}" data-cpu-ready="{{ .JSON.Bool "cpuReady" }}" data-memory-mib="{{ .JSON.Float "memoryMiB" }}">
+      <p><span class="color-positive">● Running</span> · memory {{ printf "%.0f" (.JSON.Float "memoryMiB") }}/{{ printf "%.0f" (.JSON.Float "memoryLimitMiB") }} MiB{{ if .JSON.Bool "cpuReady" }} · CPU {{ printf "%.0f" (.JSON.Float "cpuPercent") }}% of container quota{{ end }}. <a href="/systems">Inspect resources ↗</a></p>
+      <p class="color-subdue">Deployment {{ printf "%.8s" (.JSON.String "revision") }} · started {{ .JSON.String "startedAt" | parseTime "rfc3339" | toRelativeTime }}.</p></div>
+    {{ else }}<p class="color-subdue">Container measurements unavailable. <a href="/systems">Inspect SYSTEMS ↗</a></p>{{ end }}

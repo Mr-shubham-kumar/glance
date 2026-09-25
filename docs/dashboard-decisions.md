@@ -1,6 +1,18 @@
 # Signal Desk dashboard decisions
 
-## Current architecture · v2 (2026-09-25)
+## Current iteration · v3 (2026-09-25)
+
+The user approved six targeted improvements and requested a more intelligible Render resources view. This supersedes the v2 notes below where inconsistent.
+
+- The open page now has manual refresh (desktop/mobile) and refreshes on return to a visible tab after ten minutes. It reloads only that page; Glance's server cache still bounds upstream requests. Selected video tab, mobile column and scroll are restored; no hidden-tab polling or keep-awake ping. TODAY stores only *local browser* last-visited timestamps to suggest which section to check next.
+- TODAY contains a brief read-only container summary linked to SYSTEMS, an intentional reuse of its localhost endpoint. No external feed or private data is duplicated; market context remains in the secondary column.
+- SYSTEMS presents current cgroup CPU and memory *used and headroom* with separate progress bars and timestamped one-hour charts. CPU requires a full sampling interval; long gaps are marked as gaps and old samples are pruned. Running Git revision, instance start time, page-fragment loads and render failures are labeled **since this process started**, not lifetime Render metrics. A separate browser-local table of observed Git revisions stores only snapshots encountered during visits to TODAY/SYSTEMS, capped at eight revisions and cleared with browser site data; its maxima are not true deployment peaks. Free workspace hours, bandwidth, build minutes and old deployments cannot be inferred from cgroup counters: these are marked unavailable locally and link to Render's authenticated Billing/Metrics/Deploys. Read [render-resources.md](render-resources.md) for first-party evidence and the published 0.1-CPU-vs-cgroup-quota distinction. After every deploy, the new revision is automatically read from `RENDER_GIT_COMMIT`; history resets. A broad all-workspaces Render API key is **not** provisioned on this public service.
+- BUILD prefers stable releases with source-authored substantive notes; alpha/beta/RC tags are skipped, and tag-only stable releases are shown only when no better entry from that project is present. GitHub Atom remains unauthenticated. GITHUB now partitions the unofficial daily feed into all-language, Go and Python selections with source URL deduplication; it does not claim stars/momentum are verified.
+- A development-time `scripts/audit-content.py --live --smoke` checks all pages for missing render cards, errors, partial notices, duplicate URLs and dated content. Age warnings alone do not fail a deployment; feed freshness belongs to the upstream publisher. Local tests cover CPU sampling windows, tag filtering and the SYSTEMS template.
+
+**Still blocked/parked:** complete server-side cross-deployment resource history and actual remaining *workspace* free quota require Render's authenticated dashboard or an explicitly approved secure API integration. Render's documented API keys cover all user workspaces, without documented per-service read-only scope; do not silently put such a key on a publicly accessible service. Gmail/Calendar extraction remains blocked without a private authenticated dashboard. Repository metadata via GitHub API remains parked because of shared-IP rate limits. Free-tier sleep and cold start remain accepted rather than defeating them with a keep-awake service.
+
+## Historical architecture · v2 (2026-09-25)
 
 Real usage exposed overlapping TODAY/RADAR/BUILD/EXPLORE stories and broken YouTube uploads-only playlists. The seven-page ownership contract is in [content-ownership.md](content-ownership.md). This section supersedes the v1 descriptions below, retained only as deployment history.
 

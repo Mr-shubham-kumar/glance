@@ -29,16 +29,17 @@ var (
 var feedParser = gofeed.NewParser()
 
 type rssWidget struct {
-	widgetBase        `yaml:",inline"`
-	FeedRequests      []rssFeedRequest `yaml:"feeds"`
-	Style             string           `yaml:"style"`
-	ThumbnailHeight   float64          `yaml:"thumbnail-height"`
-	CardHeight        float64          `yaml:"card-height"`
-	Limit             int              `yaml:"limit"`
-	CollapseAfter     int              `yaml:"collapse-after"`
-	SingleLineTitles  bool             `yaml:"single-line-titles"`
-	DescriptionLength int              `yaml:"description-length"`
-	PreserveOrder     bool             `yaml:"preserve-order"`
+	widgetBase               `yaml:",inline"`
+	FeedRequests             []rssFeedRequest `yaml:"feeds"`
+	Style                    string           `yaml:"style"`
+	ThumbnailHeight          float64          `yaml:"thumbnail-height"`
+	CardHeight               float64          `yaml:"card-height"`
+	Limit                    int              `yaml:"limit"`
+	CollapseAfter            int              `yaml:"collapse-after"`
+	SingleLineTitles         bool             `yaml:"single-line-titles"`
+	DescriptionLength        int              `yaml:"description-length"`
+	PreferMeaningfulReleases bool             `yaml:"prefer-meaningful-releases"`
+	PreserveOrder            bool             `yaml:"preserve-order"`
 
 	Items          rssFeedItemList `yaml:"-"`
 	NoItemsMessage string          `yaml:"-"`
@@ -142,6 +143,7 @@ type rssFeedRequest struct {
 	ThumbnailLinkPrefix string            `yaml:"thumbnail-link-prefix"`
 	Headers             map[string]string `yaml:"headers"`
 	IsDetailed          bool              `yaml:"-"`
+	PreferMeaningful    bool              `yaml:"-"`
 }
 
 type rssFeedItemList []rssFeedItem
@@ -155,7 +157,12 @@ func (f rssFeedItemList) sortByNewest() rssFeedItemList {
 }
 
 func (widget *rssWidget) fetchItemsFromFeeds() (rssFeedItemList, error) {
-	requests := widget.FeedRequests
+	requests := append([]rssFeedRequest(nil), widget.FeedRequests...)
+	if widget.PreferMeaningfulReleases {
+		for i := range requests {
+			requests[i].PreferMeaningful = strings.HasSuffix(requests[i].URL, "/releases.atom")
+		}
+	}
 
 	job := newJob(widget.fetchItemsFromFeedTask, requests).withWorkers(30)
 	feeds, errs, err := workerPoolDo(job)
@@ -242,14 +249,18 @@ func (widget *rssWidget) fetchItemsFromFeedTask(request rssFeedRequest) ([]rssFe
 		return nil, err
 	}
 
-	if request.Limit > 0 && len(feed.Items) > request.Limit {
+	if !request.PreferMeaningful && request.Limit > 0 && len(feed.Items) > request.Limit {
 		feed.Items = feed.Items[:request.Limit]
 	}
 
 	items := make(rssFeedItemList, 0, len(feed.Items))
+	var fallback *rssFeedItem
 
 	for i := range feed.Items {
 		item := feed.Items[i]
+		if request.PreferMeaningful && prereleaseTitlePattern.MatchString(item.Title) {
+			continue
+		}
 
 		rssItem := rssFeedItem{
 			ChannelURL: feed.Link,
@@ -359,7 +370,20 @@ func (widget *rssWidget) fetchItemsFromFeedTask(request rssFeedRequest) ([]rssFe
 			rssItem.PublishedAt = time.Now()
 		}
 
+		if request.PreferMeaningful && (rssItem.Description == "" || rssItem.Description == "No substantive release notes provided by the maintainer.") {
+			rssItem.Description = "No substantive release notes provided by the maintainer."
+			if fallback == nil {
+				fallback = &rssItem
+			}
+			continue
+		}
 		items = append(items, rssItem)
+		if request.PreferMeaningful && request.Limit > 0 && len(items) >= request.Limit {
+			break
+		}
+	}
+	if request.PreferMeaningful && len(items) == 0 && fallback != nil {
+		items = append(items, *fallback)
 	}
 
 	if resp.Header.Get("ETag") != "" || resp.Header.Get("Last-Modified") != "" {
@@ -405,6 +429,7 @@ func recursiveFindThumbnailInExtensions(extensions map[string][]gofeedext.Extens
 	return ""
 }
 
+var prereleaseTitlePattern = regexp.MustCompile(`(?i)(?:^|[.-])(?:alpha|beta|rc|preview|nightly|dev)(?:[.\d-]|$)`)
 var releaseTagOnlyPattern = regexp.MustCompile(`(?i)^(?:release:?\s*)?v?[0-9][a-z0-9.\-_+]*$`)
 
 var htmlTagsWithAttributesPattern = regexp.MustCompile(`<\/?[a-zA-Z0-9-]+ *(?:[a-zA-Z-]+=(?:"|').*?(?:"|') ?)* *\/?>`)

@@ -1,0 +1,9 @@
+- type: html
+  source: |
+    <section class="widget-content widget-content-frame render-allowances" aria-label="Render free-tier allowances">
+      <h2 class="size-h4">Free tier · account-level limits</h2>
+      <p>Render documents <strong>750 running instance-hours per workspace per month</strong> and a free web-service plan of <strong>0.1 CPU / 512 MB RAM</strong>. The live cgroup allocation above is measured independently and can differ from the published plan CPU figure.</p>
+      <p><strong>Remaining hours, outbound bandwidth and build minutes:</strong> not available from inside this container. These are workspace-wide billing values, not CPU or memory headroom. Never infer a monthly balance from a live snapshot.</p>
+      <p><a href="https://dashboard.render.com/billing#included-usage">Check remaining monthly usage ↗</a> · <a href="https://dashboard.render.com/web/srv-da447tbncjis73b0shq0/metrics">Render's persisted metrics ↗</a> · <a href="https://dashboard.render.com/web/srv-da447tbncjis73b0shq0/deploys">Deploy history ↗</a></p>
+      <p class="color-subdue">Free instances spin down after idle time; charts here reset on sleep and on future deployments. Render's authenticated pages retain the account-level view.</p>
+    </section>

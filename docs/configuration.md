@@ -782,7 +782,11 @@ Example:
 | limit | integer | no | 25 |
 | preserve-order | bool | no | false |
 | single-line-titles | boolean | no | false |
+| description-length | integer | no | 200 |
+| prefer-meaningful-releases | boolean | no | false |
 | collapse-after | integer | no | 5 |
+
+`description-length` caps source-authored detailed-list excerpts (maximum 600). In this fork, `prefer-meaningful-releases` applies only to GitHub `releases.atom` feeds: skip prerelease titles and prefer the newest stable release with actual notes to a tag-only entry; if none exist, show the newest stable tag with a no-notes label. This is deterministic filtering, not generated summarization.
 
 ##### `limit`
 The maximum number of articles to show.

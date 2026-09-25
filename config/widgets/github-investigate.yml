@@ -1,12 +1,18 @@
 - type: rss
-  title: Trending · descriptions & evidence
+  title: Trending · all / Go / Python (unofficial)
   title-url: https://github.com/trending
   style: detailed-list
   description-length: 220
-  cache: 6h
-  limit: 5
-  collapse-after: 4
+  cache: 12h
+  limit: 7
+  collapse-after: 5
   feeds:
     - url: https://mshibanami.github.io/GitHubTrendingRSS/daily/all.xml
-      title: Trending (unofficial)
-      limit: 5
+      title: All languages
+      limit: 3
+    - url: https://mshibanami.github.io/GitHubTrendingRSS/daily/go.xml
+      title: Go
+      limit: 2
+    - url: https://mshibanami.github.io/GitHubTrendingRSS/daily/python.xml
+      title: Python
+      limit: 2

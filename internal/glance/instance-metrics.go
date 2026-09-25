@@ -4,26 +4,83 @@ import (
 	"encoding/json"
 	"net/http"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 )
 
-// Instance metrics come from the container's cgroup, not Render's account API.
-// Only aggregate CPU/memory counters are published. History is in-memory and
-// resets whenever a free-tier instance sleeps or is redeployed.
+const metricsWindow = time.Hour
+const metricsSampleInterval = 2 * time.Minute
+
+var instanceStartedAt = time.Now()
+var pageContentLoads atomic.Uint64    // page fragments, not Render's total requests
+var pageContentFailures atomic.Uint64 // HTTP 500 rendering failures; upstream widget notices are separate
+var revisionPattern = regexp.MustCompile(`^[a-fA-F0-9]{7,40}$`)
+
 type instanceSample struct {
-	CPU    float64 `json:"cpu"`
-	Memory float64 `json:"memory"`
+	At       time.Time `json:"at"`
+	CPU      float64   `json:"cpu"`
+	CPUReady bool      `json:"cpuReady"`
+	Memory   float64   `json:"memory"`
+	X        float64   `json:"x"` // time position on a 0-120 SVG axis, oldest on the left
 }
 
-var instanceHistory struct {
+type metricsHistory struct {
 	sync.Mutex
-	lastTime          time.Time
-	lastTimeForSample time.Time
-	lastCPU           uint64
-	samples           []instanceSample
+	lastTime    time.Time
+	lastCPU     uint64
+	lastPercent float64
+	cpuReady    bool
+	samples     []instanceSample
+}
+
+var instanceHistory metricsHistory
+
+func clampPercent(v float64) float64 {
+	if v < 0 {
+		return 0
+	}
+	if v > 100 {
+		return 100
+	}
+	return v
+}
+
+// record is request-driven. CPU is averaged over the interval between actual
+// samples, never over an arbitrary last HTTP request. A long idle gap is a gap,
+// not a fake zero on the graph. All history is memory-only.
+func (h *metricsHistory) record(now time.Time, usage uint64, memory, memoryMax uint64, cpuCores float64) (float64, bool, []instanceSample) {
+	h.Lock()
+	defer h.Unlock()
+	cutoff := now.Add(-metricsWindow)
+	recent := h.samples[:0]
+	for _, s := range h.samples {
+		if !s.At.Before(cutoff) {
+			recent = append(recent, s)
+		}
+	}
+	h.samples = recent
+	if h.lastTime.IsZero() || now.Sub(h.lastTime) >= metricsSampleInterval {
+		ready := !h.lastTime.IsZero() && now.Sub(h.lastTime) <= 10*time.Minute && usage >= h.lastCPU
+		if ready {
+			h.lastPercent = clampPercent(float64(usage-h.lastCPU) / 1e6 / now.Sub(h.lastTime).Seconds() / cpuCores * 100)
+		}
+		h.cpuReady = ready
+		h.lastCPU, h.lastTime = usage, now
+		h.samples = append(h.samples, instanceSample{At: now, CPU: h.lastPercent, CPUReady: ready, Memory: clampPercent(float64(memory) / float64(memoryMax) * 100)})
+	}
+	if len(h.samples) > 30 {
+		h.samples = h.samples[len(h.samples)-30:]
+	}
+	out := make([]instanceSample, len(h.samples))
+	copy(out, h.samples)
+	for i := range out {
+		out[i].X = clampPercent((1-now.Sub(out[i].At).Seconds()/metricsWindow.Seconds())*100) * 1.2
+	}
+	return h.lastPercent, h.cpuReady, out
 }
 
 func readCgroupUint(path string) (uint64, error) {
@@ -64,36 +121,26 @@ func handleInstanceMetrics(w http.ResponseWriter, _ *http.Request) {
 		return
 	}
 	now := time.Now()
-	instanceHistory.Lock()
-	cpu := 0.0
-	if !instanceHistory.lastTime.IsZero() && usage >= instanceHistory.lastCPU {
-		elapsed := now.Sub(instanceHistory.lastTime).Seconds()
-		if elapsed > 0 {
-			cpu = float64(usage-instanceHistory.lastCPU) / 1e6 / elapsed / (quota / period) * 100
-		}
+	cores := quota / period
+	cpu, ready, samples := instanceHistory.record(now, usage, memory, memoryMax, cores)
+	revision := os.Getenv("RENDER_GIT_COMMIT")
+	if !revisionPattern.MatchString(revision) {
+		revision = "unavailable"
 	}
-	if cpu > 100 {
-		cpu = 100
+	remaining := uint64(0)
+	if memory < memoryMax {
+		remaining = memoryMax - memory
 	}
-	if cpu < 0 {
-		cpu = 0
-	}
-	instanceHistory.lastCPU, instanceHistory.lastTime = usage, now
-	// Avoid duplicate samples from repeated concurrent requests; roughly two
-	// minutes per point with a 60-minute maximum sliding window.
-	if len(instanceHistory.samples) == 0 || now.Sub(instanceHistory.lastTimeForSample) >= 2*time.Minute {
-		instanceHistory.samples = append(instanceHistory.samples, instanceSample{cpu, float64(memory) / float64(memoryMax) * 100})
-		instanceHistory.lastTimeForSample = now
-	}
-	if len(instanceHistory.samples) > 30 {
-		instanceHistory.samples = instanceHistory.samples[len(instanceHistory.samples)-30:]
-	}
-	samples := append([]instanceSample(nil), instanceHistory.samples...)
-	instanceHistory.Unlock()
 	json.NewEncoder(w).Encode(map[string]any{
-		"available": true, "cpuPercent": cpu,
-		"memoryMiB": float64(memory) / 1048576, "memoryLimitMiB": float64(memoryMax) / 1048576,
-		"memoryPercent": float64(memory) / float64(memoryMax) * 100,
-		"cpuLimitCores": quota / period, "samples": samples,
+		"available": true, "observedAt": now, "startedAt": instanceStartedAt,
+		"uptimeMinutes": int(now.Sub(instanceStartedAt).Minutes()),
+		"revision":      revision, "pageContentLoads": pageContentLoads.Load(), "pageContentFailures": pageContentFailures.Load(),
+		"cpuReady": ready, "cpuPercent": cpu, "cpuHeadroomPercent": 100 - cpu,
+		"cpuLimitCores":      cores,
+		"memoryMiB":          float64(memory) / 1048576,
+		"memoryLimitMiB":     float64(memoryMax) / 1048576,
+		"memoryRemainingMiB": float64(remaining) / 1048576,
+		"memoryPercent":      float64(memory) / float64(memoryMax) * 100,
+		"samples":            samples,
 	})
 }

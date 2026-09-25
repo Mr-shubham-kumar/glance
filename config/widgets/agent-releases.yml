@@ -2,6 +2,7 @@
   title: Agent + dashboard · source release notes
   style: detailed-list
   description-length: 390
+  prefer-meaningful-releases: true
   cache: 2h
   limit: 6
   collapse-after: 5

@@ -342,6 +342,7 @@ func (a *application) handlePageContentRequest(w http.ResponseWriter, r *http.Re
 		return
 	}
 
+	pageContentLoads.Add(1)
 	pageData := templateData{
 		Page: page,
 	}
@@ -358,6 +359,7 @@ func (a *application) handlePageContentRequest(w http.ResponseWriter, r *http.Re
 	}()
 
 	if err != nil {
+		pageContentFailures.Add(1)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
 		return

@@ -1,19 +1,29 @@
 - type: custom-api
-  title: This Render container · live resources
+  title: This Render container · resources & deploy
   title-url: https://dashboard.render.com/web/srv-da447tbncjis73b0shq0/metrics
   url: http://127.0.0.1:8080/api/instance-metrics
   cache: 2m
   template: |
     {{ if .JSON.Bool "available" }}
-    <div class="instance-stats">
-      <div><strong>CPU</strong> <span>{{ printf "%.1f" (.JSON.Float "cpuPercent") }}%</span> <small>of {{ printf "%.2f" (.JSON.Float "cpuLimitCores") }} allocated cores</small></div>
-      <svg viewBox="0 0 125 100" preserveAspectRatio="none" role="img" aria-label="Recent CPU percent samples">
-        {{ range $i, $s := .JSON.Array "samples" }}<rect x="{{ mul (toFloat $i) 4.0 }}" y="{{ sub 100.0 ($s.Float "cpu") }}" width="3" height="{{ $s.Float "cpu" }}" fill="currentColor" />{{ end }}
-      </svg>
-      <div><strong>Memory</strong> <span>{{ printf "%.0f" (.JSON.Float "memoryMiB") }} / {{ printf "%.0f" (.JSON.Float "memoryLimitMiB") }} MiB</span> <small>{{ printf "%.1f" (.JSON.Float "memoryPercent") }}%</small></div>
-      <svg viewBox="0 0 125 100" preserveAspectRatio="none" role="img" aria-label="Recent memory percent samples">
-        {{ range $i, $s := .JSON.Array "samples" }}<rect x="{{ mul (toFloat $i) 4.0 }}" y="{{ sub 100.0 ($s.Float "memory") }}" width="3" height="{{ $s.Float "memory" }}" fill="currentColor" />{{ end }}
-      </svg>
-      <p class="color-subdue">Up to 30 samples / 60 min; sampled when requested. History resets on sleep or deploy. <a href="https://dashboard.render.com/web/srv-da447tbncjis73b0shq0/metrics">Render metrics ↗</a></p>
+    <div class="instance-stats" data-revision="{{ .JSON.String "revision" }}" data-snapshot-at="{{ .JSON.String "observedAt" }}" data-cpu-percent="{{ .JSON.Float "cpuPercent" }}" data-cpu-ready="{{ .JSON.Bool "cpuReady" }}" data-memory-mib="{{ .JSON.Float "memoryMiB" }}">
+      <p class="color-subdue">Current container · snapshot {{ .JSON.String "observedAt" | parseTime "rfc3339" | toRelativeTime }} · refresh when you return to this tab</p>
+      <div class="instance-metric"><div class="instance-metric-heading"><strong>CPU</strong><span>{{ if .JSON.Bool "cpuReady" }}{{ printf "%.1f" (.JSON.Float "cpuPercent") }}% used · {{ printf "%.1f" (.JSON.Float "cpuHeadroomPercent") }}% available{{ else }}Measuring · first interval pending{{ end }}</span></div>
+      <small>Share of {{ printf "%.2f" (.JSON.Float "cpuLimitCores") }} cores observed in this container's cgroup (not a billing balance).</small>
+      {{ if .JSON.Bool "cpuReady" }}<div class="instance-meter" role="img" aria-label="CPU share used"><div style="width:{{ printf "%.1f" (.JSON.Float "cpuPercent") }}%"></div></div>{{ end }}
+      <svg viewBox="0 0 122 100" preserveAspectRatio="none" role="img" aria-label="CPU percentage history, past 60 minutes; gaps have no bars">
+        {{ range .JSON.Array "samples" }}{{ if .Bool "cpuReady" }}<rect x="{{ .Float "x" }}" y="{{ sub 100.0 (.Float "cpu") }}" width="2" height="{{ .Float "cpu" }}" fill="currentColor" />{{ end }}{{ end }}
+      </svg></div>
+      <div class="instance-metric"><div class="instance-metric-heading"><strong>Memory</strong><span>{{ printf "%.0f" (.JSON.Float "memoryMiB") }} MiB used · {{ printf "%.0f" (.JSON.Float "memoryRemainingMiB") }} MiB available</span></div>
+      <small>{{ printf "%.1f" (.JSON.Float "memoryPercent") }}% of {{ printf "%.0f" (.JSON.Float "memoryLimitMiB") }} MiB container limit.</small>
+      <div class="instance-meter" role="img" aria-label="Memory share used"><div style="width:{{ printf "%.1f" (.JSON.Float "memoryPercent") }}%"></div></div>
+      <svg viewBox="0 0 122 100" preserveAspectRatio="none" role="img" aria-label="Memory percentage history, past 60 minutes; gaps have no bars">
+        {{ range .JSON.Array "samples" }}<rect x="{{ .Float "x" }}" y="{{ sub 100.0 (.Float "memory") }}" width="2" height="{{ .Float "memory" }}" fill="currentColor" />{{ end }}
+      </svg></div>
+      <p class="instance-timescale">← 60 min ago <span>now →</span></p>
+      <div class="instance-deploy"><strong>Running revision</strong> {{ if ne (.JSON.String "revision") "unavailable" }}<a href="https://github.com/Mr-shubham-kumar/glance/commit/{{ .JSON.String "revision" }}">{{ printf "%.8s" (.JSON.String "revision") }} ↗</a>{{ else }}Not supplied by Render{{ end }}<br>
+      <strong>Started</strong> {{ .JSON.String "startedAt" | parseTime "rfc3339" | toRelativeTime }} · {{ .JSON.Int "uptimeMinutes" }} minutes up<br>
+      <strong>Page loads</strong> {{ .JSON.Int "pageContentLoads" }} since start · {{ .JSON.Int "pageContentFailures" }} render failures (not total Render traffic)</div>
+      <p class="color-subdue">Samples only when visited; a sleep/deploy resets server history. This measures only this running container, not the workspace.</p>
+      <div id="observed-deployments" class="instance-deploy-history"></div>
     </div>
-    {{ else }}<p class="color-subdue">Container metrics unavailable here. <a href="https://dashboard.render.com/web/srv-da447tbncjis73b0shq0/metrics">View Render metrics ↗</a></p>{{ end }}
+    {{ else }}<p class="color-subdue">Container cgroup metrics unavailable on this host. <a href="https://dashboard.render.com/web/srv-da447tbncjis73b0shq0/metrics">Render metrics ↗</a></p>{{ end }}

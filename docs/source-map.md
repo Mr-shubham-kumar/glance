@@ -1,6 +1,13 @@
 # Signal Desk source map
 
-## v2 active sources · canonical owners (2026-09-25)
+## v3 source changes · 2026-09-25
+
+- TODAY and SYSTEMS share **only** the local `GET /api/instance-metrics` endpoint: 5m compact summary versus 2m full cgroup card; no upstream credential, server history is request-driven and resets on sleep/deploy. Browser-local observed revision maxima can persist across deployments on the same device, but are not true peaks. Workspace allowances are *static documented context*, not fetched balances; authenticated Billing/Metrics/Deploys links are navigation only. See [render-resources.md](render-resources.md).
+- GITHUB partitions the same unofficial publisher's daily RSS into `all.xml` (3), `go.xml` (2), `python.xml` (2). Cache 12h, native URL dedup. The extra category feeds are not independent confirmation; failure mode: generator outage or README-heavy descriptions. No API credentials or guessed momentum scores.
+- BUILD's GitHub releases.atom feeds remain 2h and 1 per repo, but now prefer substantive stable notes over tag-only/alpha/beta/RC entries; a stable tag without notes is fallback, not made-up prose. The source may publish no new stable release for weeks.
+- No other live sources added. Render plan data is explicitly separated from actual container measurements and monthly workspace balances. When visiting a background tab after ten minutes, the browser refreshes its page fragment via Glance's usual bounded widget cache, not by polling feeds continuously.
+
+## v2 historical inventory (superseded by v3 deltas above)
 
 Prior candidate scores and v1 inventory below are historical; they do **not** describe current deployment. See [content-ownership.md](content-ownership.md). Cache values are server-side refresh intervals, not page reload rates.
 

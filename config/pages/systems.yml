@@ -9,4 +9,5 @@
     - size: full
       widgets:
         - $include: ../widgets/instance-metrics.yml
+        - $include: ../widgets/render-allowances.yml
         - $include: ../widgets/github-status.yml

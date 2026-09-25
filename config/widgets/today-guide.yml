@@ -1,7 +1,7 @@
 - type: html
   title: Decide what to open
   source: |
-    <div class="widget-content widget-content-frame"><p class="color-subdue" style="overflow-wrap:anywhere">This site is public: no personal mail or calendar data. <a href="/systems">SYSTEMS</a> · <a href="/build">BUILD</a> · <a href="/radar">RADAR</a> · <a href="/github">GITHUB</a> · <a href="/think">THINK</a></p></div>
+    <div class="widget-content widget-content-frame"><p class="color-subdue" style="overflow-wrap:anywhere">This site is public: no personal mail or calendar data. <a href="/systems">SYSTEMS</a> · <a href="/build">BUILD</a> · <a href="/radar">RADAR</a> · <a href="/github">GITHUB</a> · <a href="/think">THINK</a></p><p id="local-visit-context" class="color-subdue margin-top-10" aria-label="Recently visited sections"></p></div>
 - type: bookmarks
   title: Private actions · open at source
   groups:

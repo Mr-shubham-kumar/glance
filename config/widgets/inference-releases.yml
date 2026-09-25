@@ -2,6 +2,7 @@
   title: Inference + runtime · source release notes
   style: detailed-list
   description-length: 350
+  prefer-meaningful-releases: true
   cache: 2h
   limit: 4
   collapse-after: 4

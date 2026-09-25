@@ -4,9 +4,9 @@ import { throttledDebounce, isElementVisible, openURLInNewTab } from './utils.js
 import { elem, find, findAll } from './templating.js';
 
 async function fetchPageContent(pageData) {
-    // TODO: handle non 200 status codes/time outs
-    // TODO: add retries
-    const response = await fetch(`${pageData.baseURL}/api/pages/${pageData.slug}/content/`);
+    // Do not retry upstream-heavy pages in a loop. A manual refresh is available.
+    const response = await fetch(`${pageData.baseURL}/api/pages/${pageData.slug}/content/`, { cache: "no-store" });
+    if (!response.ok) throw new Error(`Unable to load page content (${response.status})`);
     const content = await response.text();
 
     return content;
@@ -744,6 +744,119 @@ function initThemePicker() {
     })
 }
 
+const PAGE_REFRESH_AFTER = 10 * 60 * 1000;
+const RESTORE_KEY = `signal-desk:refresh:${pageData.slug}`;
+
+function storeRefreshState() {
+    try {
+        sessionStorage.setItem(RESTORE_KEY, JSON.stringify({
+            at: Date.now(), scroll: window.scrollY,
+            tabs: Array.from(document.querySelectorAll('.widget-type-group')).map((group) =>
+                Array.from(group.querySelectorAll('.widget-header > *')).findIndex((tab) => tab.classList.contains('widget-group-title-current'))
+            ),
+            column: document.querySelector('.mobile-navigation-input:checked')?.value,
+        }));
+    } catch { /* Storage may be disabled; refresh still works. */ }
+}
+
+function restoreRefreshState() {
+    try {
+        const state = JSON.parse(sessionStorage.getItem(RESTORE_KEY) || 'null');
+        sessionStorage.removeItem(RESTORE_KEY);
+        if (!state || Date.now() - state.at > 30000) return;
+        const groups = document.querySelectorAll('.widget-type-group');
+        groups.forEach((group, i) => {
+            const tabs = group.querySelectorAll('.widget-header > *');
+            if (state.tabs[i] > 0 && tabs[state.tabs[i]]) tabs[state.tabs[i]].click();
+        });
+        if (state.column !== undefined) {
+            const column = Array.from(document.querySelectorAll('.mobile-navigation-input')).find((input) => input.value === state.column);
+            if (column) column.checked = true;
+        }
+        setTimeout(() => window.scrollTo(0, state.scroll || 0), 150);
+    } catch { /* Bad/stale storage must never prevent page rendering. */ }
+}
+
+function updateVisitContext() {
+    try {
+        const pages = ['radar', 'build', 'github', 'systems', 'explore', 'think'];
+        const times = pages.map((slug) => ({slug, at: Number(localStorage.getItem(`signal-desk:visited:${slug}`)) || 0}));
+        const panel = document.getElementById('local-visit-context');
+        if (panel) {
+            panel.textContent = 'On this browser · next to check: ';
+            times.sort((a, b) => a.at - b.at).slice(0, 3).forEach((page, i) => {
+                if (i) panel.append(' · ');
+                const link = document.createElement('a');
+                link.href = `${pageData.baseURL}/${page.slug}`;
+                link.textContent = `${page.slug.toUpperCase()} ${page.at ? timestampToRelativeTime(page.at / 1000) + ' since visit' : 'not visited yet'}`;
+                panel.append(link);
+            });
+        }
+        localStorage.setItem(`signal-desk:visited:${pageData.slug}`, String(Date.now()));
+    } catch { /* Local-only convenience, no telemetry sent to the server. */ }
+}
+
+function updateObservedRevisions() {
+    const element = document.querySelector('[data-revision][data-snapshot-at]');
+    const output = document.getElementById('observed-deployments');
+    if (!element) return;
+    const {revision, snapshotAt, cpuPercent, cpuReady, memoryMib} = element.dataset;
+    if (!/^[a-f0-9]{7,40}$/i.test(revision)) return;
+    const cpu = Number(cpuPercent);
+    const memory = Number(memoryMib);
+    const at = Date.parse(snapshotAt);
+    if (!Number.isFinite(at) || !Number.isFinite(memory) || memory < 0) return;
+    try {
+        const key = 'signal-desk:observed-revisions';
+        const revisions = JSON.parse(localStorage.getItem(key) || '[]');
+        if (!Array.isArray(revisions)) return;
+        let record = revisions.find((item) => item.revision === revision);
+        if (!record) {
+            record = {revision, first: at, last: at, count: 0, memoryMax: 0, cpuMax: null};
+            revisions.push(record);
+        }
+        if (record.snapshotAt !== snapshotAt) {
+            record.count += 1;
+            record.last = Math.max(record.last, at);
+            record.memoryMax = Math.max(record.memoryMax, memory);
+            if (cpuReady === 'true' && Number.isFinite(cpu)) record.cpuMax = Math.max(record.cpuMax ?? 0, cpu);
+            record.snapshotAt = snapshotAt;
+        }
+        revisions.sort((a, b) => b.last - a.last);
+        const bounded = revisions.slice(0, 8);
+        localStorage.setItem(key, JSON.stringify(bounded));
+        if (!output) return;
+        const heading = document.createElement('h3');
+        heading.className = 'size-h4 color-highlight';
+        heading.textContent = 'Observed revisions on this browser';
+        output.append(heading);
+        const explanation = document.createElement('p');
+        explanation.className = 'color-subdue';
+        explanation.textContent = 'Only snapshots while you visited TODAY or SYSTEMS. Max observed ≠ actual peak; resets if browser site data is cleared. Same commit SHA is grouped together across restarts.';
+        output.append(explanation);
+        for (const item of bounded) {
+            const row = document.createElement('p');
+            row.textContent = `${item.revision.slice(0, 8)} · ${item.count} snapshots · max seen ${Math.round(item.memoryMax)} MiB memory${item.cpuMax === null ? '' : ' / ' + item.cpuMax.toFixed(1) + '% CPU quota'} · last ${new Date(item.last).toLocaleString()}`;
+            output.append(row);
+        }
+    } catch { /* Browser storage is optional; live metrics continue to work. */ }
+}
+
+function enablePageRefresh() {
+    const loadedAt = Date.now();
+    let refreshing = false;
+    const refresh = (manual = false) => {
+        if (refreshing || (!manual && (document.hidden || !navigator.onLine || Date.now() - loadedAt < PAGE_REFRESH_AFTER))) return;
+        if (!manual && ['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+        refreshing = true;
+        storeRefreshState();
+        window.location.reload();
+    };
+    document.querySelectorAll('.page-refresh').forEach((button) => button.addEventListener('click', () => refresh(true)));
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
+    window.addEventListener('focus', () => refresh());
+}
+
 async function setupPage() {
     initThemePicker();
 
@@ -766,6 +879,10 @@ async function setupPage() {
         setupMasonries();
         setupDynamicRelativeTime();
         setupLazyImages();
+        updateVisitContext();
+        updateObservedRevisions();
+        enablePageRefresh();
+        restoreRefreshState();
     } finally {
         pageElement.classList.add("content-ready");
         pageElement.setAttribute("aria-busy", "false");

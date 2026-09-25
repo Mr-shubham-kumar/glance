@@ -33,6 +33,7 @@
             <nav class="desktop-navigation flex grow hide-scrollbars">
                 {{ template "navigation-links" . }}
             </nav>
+            <button class="page-refresh" type="button" title="Refresh this page" aria-label="Refresh this page">↻</button>
             {{ if not .App.Config.Theme.DisablePicker }}
             <div class="theme-picker self-center" data-popover-type="html" data-popover-position="below" data-popover-show-delay="0">
                 <div class="current-theme-preview">
@@ -57,6 +58,7 @@
     <div class="mobile-navigation">
         <div class="mobile-navigation-icons">
             <a class="mobile-navigation-label" href="#top">↑</a>
+            <button class="mobile-navigation-label page-refresh" type="button" title="Refresh this page" aria-label="Refresh this page">↻</button>
             {{ range $i, $column := .Page.Columns }}
             <label class="mobile-navigation-label"><input type="radio" class="mobile-navigation-input" name="column" value="{{ $i }}" autocomplete="off"{{ if eq $i $.Page.PrimaryColumnIndex }} checked{{ end }}><div class="mobile-navigation-pill"></div></label>
             {{ end }}
