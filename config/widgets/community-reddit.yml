@@ -1,5 +1,6 @@
 - type: rss
   title: Reddit · r/selfhosted (public feed)
+  css-class: community-reddit
   title-url: https://www.reddit.com/r/selfhosted/
   cache: 12h
   style: detailed-list
