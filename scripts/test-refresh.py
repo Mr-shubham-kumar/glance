@@ -43,6 +43,12 @@ try:
     state = eval_js("sessionStorage.getItem('signal-desk:refresh:explore')")
     print('Restored tab:',selected,'Temporary session state cleared:',state is None)
     if selected != 'Hardware & systems' or state is not None: raise RuntimeError('refresh did not restore the selected tab')
+    eval_js("const actualNow = Date.now; Date.now = () => actualNow() + 11 * 60 * 1000; window.dispatchEvent(new Event('focus')); true")
+    time.sleep(12)
+    selected = eval_js("document.querySelector('.widget-type-group .widget-group-title-current')?.textContent.trim()")
+    state = eval_js("sessionStorage.getItem('signal-desk:refresh:explore')")
+    print('Return-after-ten-minutes refresh restored tab:', selected, 'State cleared:', state is None)
+    if selected != 'Hardware & systems' or state is not None: raise RuntimeError('return-to-tab refresh failed')
     ws.close()
 finally:
     process.terminate()

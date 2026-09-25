@@ -58,7 +58,7 @@ func TestInstanceMetricsTemplateRendersLivePayload(t *testing.T) {
 	if err := tpl.Execute(&buf, data); err != nil {
 		t.Fatal(err)
 	}
-	for _, text := range []string{"23.4%", "42 MiB", "470 MiB", "01234567", "Page loads"} {
+	for _, text := range []string{"23.4%", "42 MiB", "470 MiB", "01234567", "7 page loads"} {
 		if !strings.Contains(buf.String(), text) {
 			t.Fatalf("expected %q in metrics widget: %s", text, buf.String())
 		}

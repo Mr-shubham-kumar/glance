@@ -21,8 +21,8 @@
       </svg></div>
       <p class="instance-timescale">← 60 min ago <span>now →</span></p>
       <div class="instance-deploy"><strong>Running revision</strong> {{ if ne (.JSON.String "revision") "unavailable" }}<a href="https://github.com/Mr-shubham-kumar/glance/commit/{{ .JSON.String "revision" }}">{{ printf "%.8s" (.JSON.String "revision") }} ↗</a>{{ else }}Not supplied by Render{{ end }}<br>
-      <strong>Started</strong> <span {{ .JSON.String "startedAt" | parseTime "rfc3339" | toRelativeTime }}></span> ago · {{ .JSON.Int "uptimeMinutes" }} minutes up<br>
-      <strong>Page loads</strong> {{ .JSON.Int "pageContentLoads" }} since start · {{ .JSON.Int "pageContentFailures" }} render failures (not total Render traffic)</div>
+      <strong>Started</strong> <span {{ .JSON.String "startedAt" | parseTime "rfc3339" | toRelativeTime }}></span> ago<br>
+      <strong>At snapshot</strong> {{ .JSON.Int "pageContentLoads" }} page loads · {{ .JSON.Int "pageContentFailures" }} render failures since start (not total Render traffic)</div>
       <p class="color-subdue">Samples only when visited; a sleep/deploy resets server history. This measures only this running container, not the workspace.</p>
       <div id="observed-deployments" class="instance-deploy-history"></div>
     </div>
