@@ -1,16 +1,4 @@
-- type: rss
-  title: Reddit · r/selfhosted (public feed)
-  css-class: community-reddit
-  title-url: https://www.reddit.com/r/selfhosted/
-  cache: 12h
-  style: detailed-list
-  description-length: 170
-  limit: 4
-  collapse-after: 4
-  feeds:
-    - url: https://www.reddit.com/r/selfhosted/.rss?limit=10
-      title: r/selfhosted
-      channel-url: https://www.reddit.com/r/selfhosted/
-      limit: 4
-      headers:
-        User-Agent: SignalDeskPublicRSS/1.0 (+https://glance-9gmu.onrender.com/)
+- type: html
+  title: Reddit · read at source
+  source: |
+    <div class="widget-content widget-content-frame"><p class="color-subdue">Public Reddit RSS is parked: Reddit intermittently returns HTTP 429 to Render's shared egress. Open the communities below for current posts; this dashboard does not cache stale posts or use a third-party proxy.</p></div>

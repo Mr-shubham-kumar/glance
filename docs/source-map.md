@@ -4,7 +4,7 @@
 
 - TODAY includes Glance's native Open-Meteo hourly weather for **New Delhi, India** as the expressly requested fallback, composed in the clock frame by the browser. This does not request the visitor's geolocation or infer it from IP. Account links are bookmarks only; no Google account content is fetched.
 - GITHUB's unofficial RSS generator now has All/Go/Python/TypeScript feeds (2 each, 12h cache) and each source label points to the corresponding **official** Trending category via `channel-url`. A native bookmarks panel provides direct official navigation even if the feed is empty. Article titles still point to the repository, not the filter.
-- COMMUNITY owns public Reddit r/selfhosted RSS (12h, four entries; shared Render egress may rate-limit with 429) and original Substack essays from Experimental History and Construction Physics (12h; two items each). THINK no longer links Experimental History. Reddit community bookmarks remain functional if RSS is blocked; do not add a third-party proxy or present a link as fetched content. Neither source uses credentials or personal account data.
+- COMMUNITY owns original Substack essays from Experimental History and Construction Physics (12h; two items each). THINK no longer links Experimental History. Reddit r/selfhosted RSS **worked once then returned 429** from Render after a redeploy, leaving a visible error; the RSS widget is therefore PARKED. Three official subreddit links and an honest on-page notice remain; links are not represented as fetched posts. No proxy, credentials or personal account data.
 
 ## v3 source changes · 2026-09-25
 

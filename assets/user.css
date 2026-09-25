@@ -39,9 +39,6 @@
 .instance-deploy-history { border-top: 1px solid var(--color-widget-content-border); padding-top: 0.8rem; display: grid; gap: 0.4rem; }
 .instance-deploy-history p { overflow-wrap: anywhere; }
 
-/* Reddit preview images often block external browsers; show readable post text instead. */
-.community-reddit .rss-detailed-thumbnail { display: none; }
-
 /* Native hourly Open-Meteo widget composed within TODAY's clock frame. */
 .clock:has(.clock-weather-widget) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem); align-items: center; gap: 2rem; }
 .clock:has(.clock-weather-widget) > [data-local-time] { width: min(100%, 32rem); }
