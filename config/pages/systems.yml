@@ -8,6 +8,7 @@
         - $include: ../widgets/safe-links.yml
     - size: full
       widgets:
+        - $include: ../widgets/intelligence-systems.yml
         - $include: ../widgets/instance-metrics.yml
         - $include: ../widgets/render-allowances.yml
         - $include: ../widgets/github-status.yml

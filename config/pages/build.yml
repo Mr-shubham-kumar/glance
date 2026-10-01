@@ -4,6 +4,7 @@
   columns:
     - size: full
       widgets:
+        - $include: ../widgets/intelligence-build.yml
         - $include: ../widgets/agent-releases.yml
         - $include: ../widgets/inference-releases.yml
     - size: full

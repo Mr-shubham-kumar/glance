@@ -461,6 +461,7 @@ func (a *application) server() (func() error, func() error) {
 		w.WriteHeader(http.StatusOK)
 	})
 	mux.HandleFunc("GET /api/instance-metrics", handleInstanceMetrics)
+	mux.HandleFunc("GET /api/intelligence", handlePublicIntelligence)
 
 	if a.RequiresAuth {
 		mux.HandleFunc("GET /login", a.handleLoginPageRequest)

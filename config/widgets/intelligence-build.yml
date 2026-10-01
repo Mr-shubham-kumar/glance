@@ -1,0 +1,9 @@
+- type: custom-api
+  title: Release → experiment matches
+  url: http://127.0.0.1:8080/api/intelligence
+  cache: 3h
+  template: |
+    <div class="intelligence-card">
+      <p class="color-subdue">Source-authored release evidence · collected {{ .JSON.String "generated_at" }}{{ if not (.JSON.Bool "data_fresh") }} · last known evidence{{ end }}</p>
+      {{ range .JSON.Array "items.experiments" }}<p><a href="{{ .String "url" }}">{{ .String "source" }}: {{ .String "title" }}</a> → <a href="{{ .String "experiment_url" }}">{{ .String "experiment" }}</a><br><span class="color-subdue">{{ .String "published_at" }} · {{ .String "reason" }} · matched “{{ .String "matched_phrase" }}” in: {{ .String "evidence" }}</span></p>{{ else }}<p class="color-subdue">No release notes currently justify a new experiment.</p>{{ end }}
+    </div>

@@ -4,6 +4,7 @@
   columns:
     - size: full
       widgets:
+        - $include: ../widgets/intelligence-radar.yml
         - $include: ../widgets/research-queue.yml
         - $include: ../widgets/radar-frontier.yml
         - $include: ../widgets/radar-research.yml

@@ -7,6 +7,7 @@
   columns:
     - size: full
       widgets:
+        - $include: ../widgets/intelligence-today.yml
         - $include: ../widgets/personal-desk.yml
         - $include: ../widgets/focus-board.yml
         - $include: ../widgets/discover-news.yml

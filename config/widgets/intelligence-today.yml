@@ -1,0 +1,9 @@
+- type: custom-api
+  title: Decision brief · public signals
+  url: http://127.0.0.1:8080/api/intelligence
+  cache: 3h
+  template: |
+    <div class="intelligence-card">
+      <p class="color-subdue">Updated {{ .JSON.String "generated_at" }} · {{ if .JSON.Bool "data_fresh" }}fresh collection{{ else }}snapshot unavailable or stale{{ end }}</p>
+      {{ range .JSON.Array "brief" }}<p><strong>{{ .String "label" }}</strong> · <a href="{{ .String "url" }}">{{ .String "title" }}</a><br><span class="color-subdue">{{ .String "reason" }}</span></p>{{ else }}<p class="color-subdue">No supported decision signal in this collection window.</p>{{ end }}
+    </div>
