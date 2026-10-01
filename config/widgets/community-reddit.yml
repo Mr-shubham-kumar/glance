@@ -2,15 +2,8 @@
   title: Reddit · fresh community posts
   cache: 30m
   max-item-age: 2d
-  limit: 9
+  limit: 12
   collapse-after: 6
   feeds:
-    - url: https://www.reddit.com/r/selfhosted/new/.rss?limit=10
-      title: r/selfhosted
-      limit: 3
-    - url: https://www.reddit.com/r/ObsidianMD/new/.rss?limit=10
-      title: r/ObsidianMD
-      limit: 3
-    - url: https://www.reddit.com/r/LocalLLaMA/new/.rss?limit=10
-      title: r/LocalLLaMA
-      limit: 3
+    - url: https://www.reddit.com/r/selfhosted+ObsidianMD+LocalLLaMA/new/.rss?limit=30
+      title: Reddit communities

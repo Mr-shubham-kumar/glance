@@ -356,6 +356,9 @@ func (widget *rssWidget) fetchItemsFromFeedTask(request rssFeedRequest) ([]rssFe
 		} else {
 			rssItem.ChannelName = feed.Title
 		}
+		if strings.Contains(request.URL, "reddit.com/r/") && len(item.Categories) > 0 {
+			rssItem.ChannelName = "r/" + item.Categories[0]
+		}
 
 		if item.Image != nil {
 			rssItem.ImageURL = item.Image.URL

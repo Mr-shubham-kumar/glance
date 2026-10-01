@@ -838,15 +838,23 @@ function setupCommunityReadingList() {
     const list = document.querySelector('.community-reading-list');
     if (!list) return;
     const key = 'signal-desk:community-read:v1';
-    const links = Array.from(list.querySelectorAll('.rss-detailed-description')).length
-        ? Array.from(list.querySelectorAll('a.size-h3[href]'))
-        : Array.from(list.querySelectorAll('a.title[href]'));
+    const links = Array.from(list.querySelectorAll('a.size-h3[href]'));
     let read;
     try { read = new Set(JSON.parse(localStorage.getItem(key) || '[]')); }
     catch { read = new Set(); }
     const apply = () => {
         links.forEach((link) => { link.closest('li').hidden = read.has(link.href); });
     };
+    const markAll = document.createElement('button');
+    markAll.type = 'button';
+    markAll.className = 'reading-clear';
+    markAll.textContent = 'Mark all as read';
+    markAll.addEventListener('click', () => {
+        links.forEach((link) => read.add(link.href));
+        try { localStorage.setItem(key, JSON.stringify(Array.from(read).slice(-200))); } catch {}
+        apply();
+    });
+    list.querySelector('.widget-header')?.append(markAll);
     links.forEach((link) => link.addEventListener('click', () => {
         read.add(link.href);
         try { localStorage.setItem(key, JSON.stringify(Array.from(read).slice(-200))); } catch {}
