@@ -1,0 +1,13 @@
+{{ template "widget-base.html" . }}
+{{ define "widget-content" }}
+<div class="release-tiles">
+  {{ range .Items }}
+  <a class="release-tile widget-content-frame" href="{{ .Link }}" target="_blank" rel="noreferrer">
+    <span class="release-tile-source">{{ .ChannelName }}</span>
+    <strong>{{ .Title }}</strong>
+    <small {{ dynamicRelativeTimeAttrs .PublishedAt }}></small>
+    <span class="release-tile-arrow" aria-hidden="true">↗</span>
+  </a>
+  {{ else }}<p>{{ .NoItemsMessage }}</p>{{ end }}
+</div>
+{{ end }}

@@ -834,50 +834,25 @@ function setupPersonalDesk() {
     });
 }
 
-function updateObservedRevisions() {
-    const element = document.querySelector('[data-revision][data-snapshot-at]');
-    const output = document.getElementById('observed-deployments');
-    if (!element) return;
-    const {revision, snapshotAt, cpuPercent, cpuReady, memoryMib} = element.dataset;
-    if (!/^[a-f0-9]{7,40}$/i.test(revision)) return;
-    const cpu = Number(cpuPercent);
-    const memory = Number(memoryMib);
-    const at = Date.parse(snapshotAt);
-    if (!Number.isFinite(at) || !Number.isFinite(memory) || memory < 0) return;
-    try {
-        const key = 'signal-desk:observed-revisions';
-        const revisions = JSON.parse(localStorage.getItem(key) || '[]');
-        if (!Array.isArray(revisions)) return;
-        let record = revisions.find((item) => item.revision === revision);
-        if (!record) {
-            record = {revision, first: at, last: at, count: 0, memoryMax: 0, cpuMax: null};
-            revisions.push(record);
-        }
-        if (record.snapshotAt !== snapshotAt) {
-            record.count += 1;
-            record.last = Math.max(record.last, at);
-            record.memoryMax = Math.max(record.memoryMax, memory);
-            if (cpuReady === 'true' && Number.isFinite(cpu)) record.cpuMax = Math.max(record.cpuMax ?? 0, cpu);
-            record.snapshotAt = snapshotAt;
-        }
-        revisions.sort((a, b) => b.last - a.last);
-        const bounded = revisions.slice(0, 8);
-        localStorage.setItem(key, JSON.stringify(bounded));
-        if (!output) return;
-        const heading = document.createElement('h3');
-        heading.className = 'size-h4 color-highlight';
-        heading.textContent = 'Observed revisions on this browser';
-        output.append(heading);
-        const explanation = document.createElement('p');
-        explanation.className = 'color-subdue';
-        explanation.textContent = 'Only snapshots while you visited TODAY or SYSTEMS. Max observed ≠ actual peak; resets if browser site data is cleared. Same commit SHA is grouped together across restarts.';
-        output.append(explanation);
-        for (const item of bounded) {
-            const row = document.createElement('p');
-            row.textContent = `${item.revision.slice(0, 8)} · ${item.count} snapshots · max seen ${Math.round(item.memoryMax)} MiB memory${item.cpuMax === null ? '' : ' / ' + item.cpuMax.toFixed(1) + '% CPU quota'} · last ${new Date(item.last).toLocaleString()}`;
-            output.append(row);
-        }
-    } catch { /* Browser storage is optional; live metrics continue to work. */ }
+function setupCommunityReadingList() {
+    const list = document.querySelector('.community-reading-list');
+    if (!list) return;
+    const key = 'signal-desk:community-read:v1';
+    const links = Array.from(list.querySelectorAll('.rss-detailed-description')).length
+        ? Array.from(list.querySelectorAll('a.size-h3[href]'))
+        : Array.from(list.querySelectorAll('a.title[href]'));
+    let read;
+    try { read = new Set(JSON.parse(localStorage.getItem(key) || '[]')); }
+    catch { read = new Set(); }
+    const apply = () => {
+        links.forEach((link) => { link.closest('li').hidden = read.has(link.href); });
+    };
+    links.forEach((link) => link.addEventListener('click', () => {
+        read.add(link.href);
+        try { localStorage.setItem(key, JSON.stringify(Array.from(read).slice(-200))); } catch {}
+        link.closest('li').hidden = true;
+    }));
+    apply();
 }
 
 function enablePageRefresh() {
@@ -919,7 +894,7 @@ async function setupPage() {
         setupLazyImages();
         updateVisitContext();
         setupPersonalDesk();
-        updateObservedRevisions();
+        setupCommunityReadingList();
         enablePageRefresh();
         restoreRefreshState();
     } finally {

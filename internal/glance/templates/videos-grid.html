@@ -9,5 +9,8 @@
         {{ template "video-card-contents" . }}
     </div>
     {{ end }}
+    {{ if and (eq (len .Videos) 0) .FallbackURL }}
+    <div class="video-feed-fallback widget-content-frame"><p>YouTube's uploads feed is unavailable right now.</p><a href="{{ .FallbackURL | safeURL }}" target="_blank" rel="noreferrer">Browse this channel on YouTube ↗</a></div>
+    {{ end }}
 </div>
 {{ end }}

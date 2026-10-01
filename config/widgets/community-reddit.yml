@@ -1,4 +1,16 @@
-- type: html
-  source: |
-    <div class="widget-header"><h2 class="uppercase">Reddit · feed parked</h2></div>
-    <div class="widget-content widget-content-frame"><p class="color-subdue">Public Reddit RSS is parked: Reddit intermittently returns HTTP 429 to Render's shared egress. Open the communities below for current posts; this dashboard does not cache stale posts or use a third-party proxy.</p></div>
+- type: rss
+  title: Reddit · fresh community posts
+  cache: 30m
+  max-item-age: 2d
+  limit: 9
+  collapse-after: 6
+  feeds:
+    - url: https://www.reddit.com/r/selfhosted/new/.rss?limit=10
+      title: r/selfhosted
+      limit: 3
+    - url: https://www.reddit.com/r/ObsidianMD/new/.rss?limit=10
+      title: r/ObsidianMD
+      limit: 3
+    - url: https://www.reddit.com/r/LocalLLaMA/new/.rss?limit=10
+      title: r/LocalLLaMA
+      limit: 3

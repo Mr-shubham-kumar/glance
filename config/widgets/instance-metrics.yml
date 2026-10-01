@@ -24,6 +24,5 @@
       <strong>Started</strong> <span {{ .JSON.String "startedAt" | parseTime "rfc3339" | toRelativeTime }}></span> ago<br>
       <strong>At snapshot</strong> {{ .JSON.Int "pageContentLoads" }} page loads · {{ .JSON.Int "pageContentFailures" }} render failures since start (not total Render traffic)</div>
       <p class="color-subdue">Samples only when visited; a sleep/deploy resets server history. This measures only this running container, not the workspace.</p>
-      <div id="observed-deployments" class="instance-deploy-history"></div>
     </div>
     {{ else }}<p class="color-subdue">Container cgroup metrics unavailable on this host. <a href="https://dashboard.render.com/web/srv-da447tbncjis73b0shq0/metrics">Render metrics ↗</a></p>{{ end }}

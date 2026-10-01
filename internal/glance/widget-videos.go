@@ -33,6 +33,7 @@ type videosWidget struct {
 	Playlists         []string  `yaml:"playlists"`
 	Limit             int       `yaml:"limit"`
 	IncludeShorts     bool      `yaml:"include-shorts"`
+	FallbackURL       string    `yaml:"fallback-url"`
 }
 
 func (w *videosWidget) initialize() error {
@@ -67,6 +68,14 @@ func (w *videosWidget) initialize() error {
 
 func (w *videosWidget) update(ctx context.Context) {
 	videos, err := w.fetchYoutubeChannelUploads(w.Channels, w.VideoUrlTemplate, w.IncludeShorts)
+	if err != nil && len(videos) == 0 && w.FallbackURL != "" {
+		w.ContentAvailable = true
+		w.Error = nil
+		w.Notice = err
+		w.Videos = nil
+		w.scheduleEarlyUpdate()
+		return
+	}
 
 	if !w.canContinueUpdateAfterHandlingErr(err) {
 		return

@@ -2,6 +2,7 @@
   widgets:
     - type: videos
       title: AI demonstrations
+      fallback-url: https://www.youtube.com/feed/subscriptions
       style: grid-cards
       channels:
         - UCxBcwypKK-W3GHd_RZ9FZrQ
@@ -12,6 +13,8 @@
       cache: 3h
     - type: videos
       title: Karpathy
+      title-url: https://www.youtube.com/@AndrejKarpathy/videos
+      fallback-url: https://www.youtube.com/@AndrejKarpathy/videos
       style: grid-cards
       channels:
         - UCXUPKJO5MZQN11PqgIvyuvQ
@@ -21,6 +24,7 @@
       cache: 3h
     - type: videos
       title: Hardware & systems
+      fallback-url: https://www.youtube.com/feed/subscriptions
       style: grid-cards
       channels:
         - UCR-DXc1voovS8nhAvccRZhg

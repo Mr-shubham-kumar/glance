@@ -1,8 +1,10 @@
 - type: rss
   title: Substack · essays worth reading
+  css-class: community-reading-list
   style: detailed-list
   description-length: 280
-  cache: 12h
+  cache: 2h
+  max-item-age: 7d
   limit: 4
   collapse-after: 4
   feeds:

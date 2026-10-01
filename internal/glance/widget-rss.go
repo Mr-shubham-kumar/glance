@@ -25,6 +25,7 @@ var (
 	rssWidgetHorizontalCardsTemplate  = mustParseTemplate("rss-horizontal-cards.html", "widget-base.html")
 	rssWidgetHorizontalCards2Template = mustParseTemplate("rss-horizontal-cards-2.html", "widget-base.html")
 	rssWidgetDiscoverTemplate         = mustParseTemplate("rss-discover.html", "widget-base.html")
+	rssWidgetReleaseTilesTemplate     = mustParseTemplate("rss-release-tiles.html", "widget-base.html")
 )
 
 var feedParser = gofeed.NewParser()
@@ -41,6 +42,7 @@ type rssWidget struct {
 	DescriptionLength        int              `yaml:"description-length"`
 	PreferMeaningfulReleases bool             `yaml:"prefer-meaningful-releases"`
 	PreserveOrder            bool             `yaml:"preserve-order"`
+	MaxItemAge              durationField    `yaml:"max-item-age"`
 
 	Items          rssFeedItemList `yaml:"-"`
 	NoItemsMessage string          `yaml:"-"`
@@ -71,7 +73,7 @@ func (widget *rssWidget) initialize() error {
 		widget.CardHeight = 0
 	}
 
-	if widget.Style == "detailed-list" || widget.Style == "discover" {
+	if widget.Style == "detailed-list" || widget.Style == "discover" || widget.Style == "release-tiles" {
 		for i := range widget.FeedRequests {
 			widget.FeedRequests[i].IsDetailed = true
 		}
@@ -93,6 +95,16 @@ func (widget *rssWidget) update(ctx context.Context) {
 	if !widget.PreserveOrder {
 		items.sortByNewest()
 	}
+	if widget.MaxItemAge > 0 {
+		cutoff := time.Now().Add(-time.Duration(widget.MaxItemAge))
+		fresh := items[:0]
+		for _, item := range items {
+			if !item.PublishedAt.Before(cutoff) {
+				fresh = append(fresh, item)
+			}
+		}
+		items = fresh
+	}
 
 	if len(items) > widget.Limit {
 		items = items[:widget.Limit]
@@ -104,6 +116,9 @@ func (widget *rssWidget) update(ctx context.Context) {
 func (widget *rssWidget) Render() template.HTML {
 	if widget.Style == "discover" {
 		return widget.renderTemplate(widget, rssWidgetDiscoverTemplate)
+	}
+	if widget.Style == "release-tiles" {
+		return widget.renderTemplate(widget, rssWidgetReleaseTilesTemplate)
 	}
 	if widget.Style == "horizontal-cards" {
 		return widget.renderTemplate(widget, rssWidgetHorizontalCardsTemplate)
