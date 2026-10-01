@@ -24,6 +24,7 @@ var (
 	rssWidgetDetailedListTemplate     = mustParseTemplate("rss-detailed-list.html", "widget-base.html")
 	rssWidgetHorizontalCardsTemplate  = mustParseTemplate("rss-horizontal-cards.html", "widget-base.html")
 	rssWidgetHorizontalCards2Template = mustParseTemplate("rss-horizontal-cards-2.html", "widget-base.html")
+	rssWidgetDiscoverTemplate         = mustParseTemplate("rss-discover.html", "widget-base.html")
 )
 
 var feedParser = gofeed.NewParser()
@@ -70,7 +71,7 @@ func (widget *rssWidget) initialize() error {
 		widget.CardHeight = 0
 	}
 
-	if widget.Style == "detailed-list" {
+	if widget.Style == "detailed-list" || widget.Style == "discover" {
 		for i := range widget.FeedRequests {
 			widget.FeedRequests[i].IsDetailed = true
 		}
@@ -101,6 +102,9 @@ func (widget *rssWidget) update(ctx context.Context) {
 }
 
 func (widget *rssWidget) Render() template.HTML {
+	if widget.Style == "discover" {
+		return widget.renderTemplate(widget, rssWidgetDiscoverTemplate)
+	}
 	if widget.Style == "horizontal-cards" {
 		return widget.renderTemplate(widget, rssWidgetHorizontalCardsTemplate)
 	}

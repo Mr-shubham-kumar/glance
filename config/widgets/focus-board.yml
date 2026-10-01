@@ -1,0 +1,10 @@
+- type: html
+  title: Your focus · on this device
+  source: |
+    <div class="focus-board" id="focus-board">
+      <p class="focus-explainer">Keep three things in view. Saved only in this browser; avoid private details on a shared device.</p>
+      <label><span>01 &nbsp; Move forward</span><input type="text" maxlength="120" autocomplete="off" data-focus-slot="0" placeholder="One thing to make progress on"></label>
+      <label><span>02 &nbsp; Follow up</span><input type="text" maxlength="120" autocomplete="off" data-focus-slot="1" placeholder="One commitment to revisit"></label>
+      <label><span>03 &nbsp; Stay curious</span><input type="text" maxlength="120" autocomplete="off" data-focus-slot="2" placeholder="One question to explore"></label>
+      <div class="focus-footer"><span id="focus-storage-status" aria-live="polite">Stored locally in this browser</span><button type="button" id="focus-clear">Clear all</button></div>
+    </div>

@@ -1,14 +1,17 @@
 - name: TODAY
   slug: today
-  width: default
+  width: wide
   head-widgets:
     - $include: ../widgets/search.yml
     - $include: ../widgets/context.yml
   columns:
-    - size: small
-      widgets:
-        - $include: ../widgets/market-pulse.yml
     - size: full
       widgets:
-        - $include: ../widgets/today-summary.yml
+        - $include: ../widgets/personal-desk.yml
+        - $include: ../widgets/focus-board.yml
+        - $include: ../widgets/discover-news.yml
         - $include: ../widgets/today-guide.yml
+    - size: small
+      widgets:
+        - $include: ../widgets/today-summary.yml
+        - $include: ../widgets/market-pulse.yml

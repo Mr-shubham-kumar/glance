@@ -1,9 +1,9 @@
 - type: html
-  title: Decide what to open
+  title: Your routes
   source: |
-    <div class="widget-content widget-content-frame"><p class="color-subdue" style="overflow-wrap:anywhere">This site is public: no personal mail or calendar data. <a href="/systems">SYSTEMS</a> · <a href="/build">BUILD</a> · <a href="/radar">RADAR</a> · <a href="/github">GITHUB</a> · <a href="/think">THINK</a> · <a href="/community">COMMUNITY</a></p><p id="local-visit-context" class="color-subdue margin-top-10" aria-label="Recently visited sections"></p></div>
+    <div class="widget-content widget-content-frame"><p class="color-subdue">Go straight to <a href="/github">emerging repositories</a>, <a href="/community">communities</a>, or <a href="/systems">your deployment</a>.</p><p id="local-visit-context" class="color-subdue margin-top-10" aria-label="Recently visited sections"></p></div>
 - type: bookmarks
-  title: Your own authenticated accounts
+  title: Open your accounts
   groups:
     - links:
         - title: Gmail · check replies needed

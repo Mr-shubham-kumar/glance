@@ -1,5 +1,11 @@
 # Signal Desk dashboard decisions
 
+## Local redesign · 2026-10-01
+
+- TODAY is an intent-led desk: four paths into existing pages, three editable focus lines kept in browser local storage, and a Discover-style news grid. This adds a personal starting point without putting Gmail, calendar, vault, or work data on the public server. Clearing browser site data removes the focus lines; another browser or device does not share them.
+- The Discover grid uses native Glance RSS fetching and publisher-provided excerpts from BBC World, BBC India, BBC Business, and Phys.org Science. It links each card to the original article and makes no generated summary or personal ranking claim. The feeds are capped at two items each and cached for 30 minutes. The local test environment cannot fetch feeds through Go, so production egress still needs a rendered check before deployment is considered verified.
+- Shared card and navigation styling received a light refresh. Other pages retain their source ownership.
+
 ## Current iteration · v4 (2026-09-25)
 
 - GITHUB: four explicit first-party Trending navigation links for All, Go, Python and TypeScript, plus four bounded unofficial RSS feeds; each feed's source label goes to its matching official category via `channel-url` and article titles still go to repositories. The header is explicitly the All-category link.

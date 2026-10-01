@@ -1,0 +1,14 @@
+- type: html
+  hide-header: true
+  source: |
+    <section class="personal-desk" aria-label="Your personal desk">
+      <p class="desk-kicker">SIGNAL DESK / YOUR STARTING POINT</p>
+      <h2 id="desk-greeting">Make room for what matters.</h2>
+      <p class="desk-intro">A place to choose a direction before the feeds choose one for you.</p>
+      <div class="desk-paths" aria-label="Explore by intent">
+        <a href="/radar"><span>01 / NOTICE</span><strong>What is changing?</strong><small>Research and early signals ↗</small></a>
+        <a href="/build"><span>02 / MAKE</span><strong>What can I try?</strong><small>Tools and releases ↗</small></a>
+        <a href="/think"><span>03 / REFLECT</span><strong>What is worth understanding?</strong><small>Ideas beyond software ↗</small></a>
+        <a href="/explore"><span>04 / WANDER</span><strong>What might surprise me?</strong><small>Videos and long reads ↗</small></a>
+      </div>
+    </section>

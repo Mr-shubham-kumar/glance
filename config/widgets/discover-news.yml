@@ -1,0 +1,19 @@
+- type: rss
+  title: Discover · beyond your usual feeds
+  style: discover
+  description-length: 160
+  cache: 30m
+  limit: 8
+  feeds:
+    - url: https://feeds.bbci.co.uk/news/world/rss.xml
+      title: BBC World
+      limit: 2
+    - url: https://feeds.bbci.co.uk/news/world/asia/india/rss.xml
+      title: BBC India
+      limit: 2
+    - url: https://feeds.bbci.co.uk/news/business/rss.xml
+      title: BBC Business
+      limit: 2
+    - url: https://phys.org/rss-feed/
+      title: Phys.org Science
+      limit: 2

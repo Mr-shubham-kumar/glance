@@ -25,6 +25,41 @@
 
 .page-refresh { color: var(--color-text-subdue); font-size: 1.5rem; cursor: pointer; background: transparent; border: 0; padding: 0 0.5rem; }
 .page-refresh:hover, .page-refresh:focus-visible { color: var(--color-primary); }
+
+/* The desk puts intention before information density. */
+.header-container .header { border-bottom: 1px solid var(--color-widget-content-border); }
+.desktop-navigation .nav-item { border-radius: .55rem; transition: background .18s ease, color .18s ease; }
+.desktop-navigation .nav-item:hover { background: color-mix(in srgb, var(--color-primary) 12%, transparent); }
+.widget { border: 1px solid color-mix(in srgb, var(--color-widget-content-border) 75%, transparent); }
+.widget-header { font-size: .74rem; font-weight: 700; }
+
+.personal-desk { position: relative; overflow: hidden; padding: clamp(1.35rem, 3vw, 2.5rem); border: 1px solid color-mix(in srgb, var(--color-primary) 35%, var(--color-widget-content-border)); border-radius: .8rem; background: radial-gradient(circle at 95% 0%, color-mix(in srgb, var(--color-primary) 22%, transparent), transparent 42%), linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 9%, var(--color-widget-background)), var(--color-widget-background)); }
+.desk-kicker { color: var(--color-primary); font-size: .72rem; font-weight: 800; letter-spacing: .18em; }
+.personal-desk h2 { max-width: 20ch; margin: 1rem 0 .55rem; font-size: clamp(2rem, 4.1vw, 3.7rem); line-height: 1.08; letter-spacing: -.045em; }
+.desk-intro { max-width: 54ch; color: var(--color-text-subdue); font-size: 1rem; line-height: 1.55; }
+.desk-paths { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; margin-top: 2rem; }
+.desk-paths a { display: flex; flex-direction: column; gap: .35rem; min-height: 7.5rem; padding: 1rem 1.1rem; border: 1px solid var(--color-widget-content-border); border-radius: .6rem; background: color-mix(in srgb, var(--color-widget-background) 80%, transparent); color: var(--color-text-base); transition: transform .18s ease, border-color .18s ease, background .18s ease; }
+.desk-paths a:hover, .desk-paths a:focus-visible { transform: translateY(-2px); border-color: var(--color-primary); background: color-mix(in srgb, var(--color-primary) 12%, var(--color-widget-background)); text-decoration: none; }
+.desk-paths span { color: var(--color-primary); font-size: .66rem; font-weight: 800; letter-spacing: .12em; }
+.desk-paths strong { font-size: 1.1rem; line-height: 1.25; }
+.desk-paths small { margin-top: auto; color: var(--color-text-subdue); }
+.focus-board { display: grid; gap: .85rem; }
+.focus-explainer { color: var(--color-text-subdue); line-height: 1.5; }
+.focus-board label { display: grid; gap: .35rem; font-size: .72rem; font-weight: 700; letter-spacing: .08em; color: var(--color-primary); text-transform: uppercase; }
+.focus-board input { width: 100%; min-height: 2.9rem; padding: .65rem .8rem; border: 1px solid var(--color-widget-content-border); border-radius: .45rem; background: color-mix(in srgb, var(--color-widget-background) 65%, transparent); color: var(--color-text-base); font: inherit; font-size: .95rem; font-weight: 400; letter-spacing: normal; text-transform: none; }
+.focus-board input:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.focus-footer { display: flex; justify-content: space-between; align-items: center; gap: 1rem; color: var(--color-text-subdue); font-size: .72rem; }
+.focus-footer button { border: 0; background: none; color: var(--color-primary); cursor: pointer; font: inherit; }
+.focus-footer button:hover, .focus-footer button:focus-visible { text-decoration: underline; }
+.discover-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; }
+.discover-card { display: flex; flex-direction: column; overflow: hidden; min-width: 0; border: 1px solid var(--color-widget-content-border); border-radius: .7rem; }
+.discover-image { width: 100%; height: 10rem; object-fit: cover; background: var(--color-widget-background-highlight); }
+.discover-card-body { display: flex; flex-direction: column; flex: 1; gap: .65rem; padding: 1rem; }
+.discover-meta { display: flex; justify-content: space-between; gap: .7rem; color: var(--color-primary); font-size: .68rem; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+.discover-card h3 { font-size: 1.12rem; line-height: 1.28; }
+.discover-card h3 a { color: var(--color-text-base); }
+.discover-description { color: var(--color-text-subdue); font-size: .85rem; line-height: 1.45; }
+.discover-read { margin-top: auto; font-size: .75rem; font-weight: 700; }
 .instance-stats { display: grid; gap: 0.7rem; }
 .instance-stats p, .instance-stats small, .render-allowances p { line-height: 1.45; }
 .instance-stats small { color: var(--color-text-subdue); }
@@ -43,6 +78,10 @@
 .render-allowances h2 { color: var(--color-primary); }
 
 @media (max-width: 600px) {
+  .desk-paths { grid-template-columns: 1fr; }
+  .discover-grid { grid-template-columns: 1fr; }
+  .personal-desk { padding: 1.25rem; }
+  .personal-desk h2 { font-size: 2.1rem; }
   .page-content {
     gap: 0.75rem;
   }

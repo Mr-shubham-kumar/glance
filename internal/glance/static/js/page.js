@@ -796,6 +796,44 @@ function updateVisitContext() {
     } catch { /* Local-only convenience, no telemetry sent to the server. */ }
 }
 
+function setupPersonalDesk() {
+    const greeting = document.getElementById('desk-greeting');
+    if (greeting) {
+        const hour = new Date().getHours();
+        greeting.textContent = hour < 12 ? 'Good morning. Choose your direction.' :
+            hour < 17 ? 'Good afternoon. Keep the signal clear.' :
+            'Good evening. Leave room to reflect.';
+    }
+
+    const board = document.getElementById('focus-board');
+    if (!board) return;
+    const key = 'signal-desk:focus:v1';
+    const fields = Array.from(board.querySelectorAll('[data-focus-slot]'));
+    const status = document.getElementById('focus-storage-status');
+    const clear = document.getElementById('focus-clear');
+    try {
+        const saved = JSON.parse(localStorage.getItem(key) || '[]');
+        if (Array.isArray(saved)) fields.forEach((field, index) => {
+            field.value = typeof saved[index] === 'string' ? saved[index].slice(0, 120) : '';
+        });
+    } catch { /* Invalid or unavailable storage leaves a usable empty board. */ }
+    const save = () => {
+        try {
+            localStorage.setItem(key, JSON.stringify(fields.map((field) => field.value.slice(0, 120))));
+            status.textContent = 'Stored locally in this browser';
+        } catch { status.textContent = 'Browser storage unavailable; entries will not persist'; }
+    };
+    fields.forEach((field) => field.addEventListener('input', save));
+    clear?.addEventListener('click', () => {
+        fields.forEach((field) => { field.value = ''; });
+        try {
+            localStorage.removeItem(key);
+            status.textContent = 'Cleared from this browser';
+        } catch { status.textContent = 'Browser storage unavailable'; }
+        fields[0]?.focus();
+    });
+}
+
 function updateObservedRevisions() {
     const element = document.querySelector('[data-revision][data-snapshot-at]');
     const output = document.getElementById('observed-deployments');
@@ -880,6 +918,7 @@ async function setupPage() {
         setupDynamicRelativeTime();
         setupLazyImages();
         updateVisitContext();
+        setupPersonalDesk();
         updateObservedRevisions();
         enablePageRefresh();
         restoreRefreshState();

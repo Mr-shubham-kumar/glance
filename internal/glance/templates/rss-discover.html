@@ -1,0 +1,21 @@
+{{ template "widget-base.html" . }}
+
+{{ define "widget-content-classes" }}widget-content-frameless{{ end }}
+
+{{ define "widget-content" }}
+{{ if gt (len .Items) 0 }}
+<div class="discover-grid">
+  {{ range .Items }}
+  <article class="discover-card widget-content-frame">
+    {{ if ne "" .ImageURL }}<img class="discover-image" src="{{ .ImageURL }}" loading="lazy" alt="">{{ end }}
+    <div class="discover-card-body">
+      <p class="discover-meta"><span>{{ .ChannelName }}</span><span {{ dynamicRelativeTimeAttrs .PublishedAt }}></span></p>
+      <h3><a href="{{ .Link }}" target="_blank" rel="noreferrer">{{ .Title }}</a></h3>
+      {{ if ne "" .Description }}<p class="discover-description">{{ .Description }}</p>{{ end }}
+      <a class="discover-read" href="{{ .Link }}" target="_blank" rel="noreferrer">Read at source ↗</a>
+    </div>
+  </article>
+  {{ end }}
+</div>
+{{ else }}<div class="widget-content-frame padding-widget">{{ .NoItemsMessage }}</div>{{ end }}
+{{ end }}
