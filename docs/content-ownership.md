@@ -1,6 +1,6 @@
 # Content ownership · Signal Desk
 
-v5 local redesign: TODAY adds a browser-local three-line focus board and a Discover-style news grid for world, India, business, and science. The board uses this browser's local storage; it is not a server-side task store. News cards display publisher headlines and excerpts with source links. These four feeds belong to TODAY and do not duplicate the deeper pages' feeds.
+v5 redesign: TODAY adds a browser-local three-line focus board and a Discover-style news grid for world, India, business, and science. The board uses this browser's local storage; it is not a server-side task store. News cards display publisher headlines and excerpts with source links. These four feeds belong to TODAY and do not duplicate the deeper pages' feeds.
 
 v4: COMMUNITY is the canonical home for Reddit community links and Substack essays. TODAY has a date/time-only clock and bookmark-style authenticated account links; the forecast was removed at the user's request. GITHUB has four explicit official category destinations and a separately labeled unofficial RSS feed; article links still lead to repositories. Reddit RSS was tried in production: it succeeded once, then returned 429 from Render's shared egress after a deploy, so the live feed is PARKED and only direct Reddit links remain. No proxy or stale copied posts.
 
