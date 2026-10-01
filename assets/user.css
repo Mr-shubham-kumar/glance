@@ -60,6 +60,14 @@
 .discover-card h3 a { color: var(--color-text-base); }
 .discover-description { color: var(--color-text-subdue); font-size: .85rem; line-height: 1.45; }
 .discover-read { margin-top: auto; font-size: .75rem; font-weight: 700; }
+.today-discovery-link { margin: 0; font-size: .82rem; }
+.discovery-stories { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; padding: 0; margin: 0; list-style: none; }
+.discovery-story { min-width: 0; padding: .8rem .9rem; border: 1px solid var(--color-widget-content-border); border-radius: .55rem; }
+.discovery-story-title { display: block; color: var(--color-text-base); font-size: .95rem; font-weight: 700; line-height: 1.35; }
+.discovery-story-meta { display: flex; flex-wrap: wrap; gap: .35rem .75rem; margin-top: .5rem; color: var(--color-text-subdue); font-size: .7rem; }
+.discovery-story-meta span:first-child { color: var(--color-primary); font-weight: 750; text-transform: uppercase; letter-spacing: .05em; }
+.discovery-unavailable { display: grid; gap: .5rem; color: var(--color-text-subdue); font-size: .85rem; }
+.discovery-unavailable p { margin: 0; }
 .instance-stats { display: grid; gap: 0.7rem; }
 .instance-stats p, .instance-stats small, .render-allowances p { line-height: 1.45; }
 .instance-stats small { color: var(--color-text-subdue); }
@@ -112,6 +120,7 @@
 @media (max-width: 600px) {
   .desk-paths { grid-template-columns: 1fr; }
   .discover-grid { grid-template-columns: 1fr; }
+  .discovery-stories { grid-template-columns: 1fr; }
   .release-tiles { grid-template-columns: 1fr; }
   .personal-desk { padding: 1.25rem; }
   .personal-desk h2 { font-size: 2.1rem; }

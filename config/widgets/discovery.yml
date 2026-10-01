@@ -1,0 +1,6 @@
+- type: extension
+  title: Perplexity Discover
+  url: http://127.0.0.1:8080/api/discovery/view
+  fallback-content-type: html
+  allow-potentially-dangerous-html: true
+  cache: 1m

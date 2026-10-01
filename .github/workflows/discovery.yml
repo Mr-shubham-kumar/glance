@@ -1,0 +1,47 @@
+name: Refresh Perplexity Discover snapshot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */3 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: perplexity-discovery
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install headless Chromium
+        run: |
+          python -m pip install --upgrade playwright
+          python -m playwright install --with-deps chromium
+      - name: Collect visible public Discover cards
+        run: python scripts/collect-discovery.py --output "$RUNNER_TEMP/discovery-snapshot.json"
+      - name: Validate snapshot JSON
+        run: python -m json.tool "$RUNNER_TEMP/discovery-snapshot.json" > /dev/null
+      - name: Publish snapshot to isolated data branch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir "$RUNNER_TEMP/data-branch"
+          cd "$RUNNER_TEMP/data-branch"
+          git init
+          git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+          git fetch origin discovery-data || true
+          if git rev-parse FETCH_HEAD >/dev/null 2>&1; then git checkout -B discovery-data FETCH_HEAD; else git checkout --orphan discovery-data; fi
+          cp "$RUNNER_TEMP/discovery-snapshot.json" snapshot.json
+          git add snapshot.json
+          if git diff --cached --quiet; then exit 0; fi
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'data: refresh Perplexity Discover snapshot'
+          git -c http.extraheader="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)" push origin HEAD:discovery-data

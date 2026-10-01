@@ -29,6 +29,7 @@ theme:
 
 pages:
   - $include: pages/today.yml
+  - $include: pages/discovery.yml
   - $include: pages/radar.yml
   - $include: pages/build.yml
   - $include: pages/github.yml

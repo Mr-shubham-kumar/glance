@@ -1,0 +1,8 @@
+- name: DISCOVERY
+  slug: discovery
+  width: wide
+  columns:
+    - size: full
+      widgets:
+        - $include: ../widgets/discovery.yml
+        - $include: ../widgets/discover-news.yml

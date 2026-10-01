@@ -462,6 +462,8 @@ func (a *application) server() (func() error, func() error) {
 	})
 	mux.HandleFunc("GET /api/instance-metrics", handleInstanceMetrics)
 	mux.HandleFunc("GET /api/intelligence", handlePublicIntelligence)
+	mux.HandleFunc("GET /api/discovery", handleDiscovery)
+	mux.HandleFunc("GET /api/discovery/view", handleDiscoveryView)
 
 	if a.RequiresAuth {
 		mux.HandleFunc("GET /login", a.handleLoginPageRequest)
