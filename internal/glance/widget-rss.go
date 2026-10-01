@@ -278,6 +278,9 @@ func (widget *rssWidget) fetchItemsFromFeedTask(request rssFeedRequest) ([]rssFe
 
 	for i := range feed.Items {
 		item := feed.Items[i]
+		if strings.Contains(request.URL, "reddit.com/r/") && strings.Contains(strings.ToLower(item.Title), "removed by reddit") {
+			continue
+		}
 		if request.PreferMeaningful && prereleaseTitlePattern.MatchString(item.Title) {
 			continue
 		}
@@ -357,7 +360,9 @@ func (widget *rssWidget) fetchItemsFromFeedTask(request rssFeedRequest) ([]rssFe
 			rssItem.ChannelName = feed.Title
 		}
 		if strings.Contains(request.URL, "reddit.com/r/") && len(item.Categories) > 0 {
-			rssItem.ChannelName = "r/" + item.Categories[0]
+			subreddit := strings.TrimPrefix(item.Categories[0], "r/")
+			rssItem.ChannelName = "r/" + subreddit
+			rssItem.ChannelURL = "https://www.reddit.com/r/" + subreddit + "/"
 		}
 
 		if item.Image != nil {
