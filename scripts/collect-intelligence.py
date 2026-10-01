@@ -72,9 +72,9 @@ def canonical(url):
 def fetch(url):
     req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/atom+xml, application/rss+xml, text/html;q=0.8"})
     with urllib.request.urlopen(req, timeout=18) as res:
-        data = res.read(1_000_001)
-    if len(data) > 1_000_000:
-        raise ValueError("response exceeds 1 MB")
+        data = res.read(2_000_001)
+    if len(data) > 2_000_000:
+        raise ValueError("response exceeds 2 MB")
     return data
 
 
