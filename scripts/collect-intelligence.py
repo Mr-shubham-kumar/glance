@@ -18,11 +18,11 @@ FEEDS = [
     ("deepmind", "Google DeepMind", "lab", "https://deepmind.google/blog/rss.xml", 1080),
     ("arxiv-ai", "arXiv cs.AI", "preprint", "https://rss.arxiv.org/rss/cs.AI", 96),
     ("arxiv-se", "arXiv cs.SE", "preprint", "https://rss.arxiv.org/rss/cs.SE", 96),
-    ("codex", "Codex", "release", "https://github.com/openai/codex/releases.atom", 720),
-    ("opencode", "OpenCode", "release", "https://github.com/anomalyco/opencode/releases.atom", 720),
-    ("mcp", "MCP", "release", "https://github.com/modelcontextprotocol/modelcontextprotocol/releases.atom", 720),
-    ("glance", "Glance", "release", "https://github.com/glanceapp/glance/releases.atom", 720),
-    ("pi", "Pi", "release", "https://github.com/badlogic/pi-mono/releases.atom", 720),
+    ("codex", "Codex", "release", "https://github.com/openai/codex/releases.atom", 0),
+    ("opencode", "OpenCode", "release", "https://github.com/anomalyco/opencode/releases.atom", 0),
+    ("mcp", "MCP", "release", "https://github.com/modelcontextprotocol/modelcontextprotocol/releases.atom", 0),
+    ("glance", "Glance", "release", "https://github.com/glanceapp/glance/releases.atom", 0),
+    ("pi", "Pi", "release", "https://github.com/badlogic/pi-mono/releases.atom", 0),
 ]
 DOCS = [
     ("render", "Render Free", "https://render.com/docs/free", ("instance hours", "spin", "bandwidth")),
@@ -147,7 +147,7 @@ def build_snapshot(previous, weekly=False, fetcher=fetch):
             cache[sid] = prior_cache.get(sid, [])
             status, error, success = "failed", type(exc).__name__, old.get("last_success_at")
         latest = max((i["published_at"] for i in cache[sid]), default="")
-        if status == "ok" and latest and (now - parse_date(latest)).total_seconds() > max_age * 3600:
+        if status == "ok" and max_age and latest and (now - parse_date(latest)).total_seconds() > max_age * 3600:
             status = "stale"
         sources.append({"id": sid, "name": name, "kind": kind, "url": url, "status": status,
                         "latest_item_at": latest, "last_success_at": success, "input_count": len(cache[sid]),

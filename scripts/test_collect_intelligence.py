@@ -60,6 +60,13 @@ class CollectorTests(unittest.TestCase):
         result = collector.build_snapshot({}, fetcher=lambda url: atom("v1.2", "https://example.com/release", "Short"))
         self.assertEqual(result["items"]["experiments"], [])
 
+    def test_quiet_release_feed_is_not_a_health_alert(self):
+        old = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=90)).isoformat()
+        feed = (f'<feed xmlns="http://www.w3.org/2005/Atom"><entry><title>v1.0</title>'
+                f'<link href="https://example.com/release"/><updated>{old}</updated></entry></feed>').encode()
+        result = collector.build_snapshot({}, fetcher=lambda url: feed)
+        self.assertTrue(all(s["status"] == "ok" for s in result["sources"] if s["kind"] == "release"))
+
 
 if __name__ == "__main__":
     unittest.main()
