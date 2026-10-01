@@ -1,0 +1,9 @@
+- type: html
+  title: Research follow-up · on this device
+  css-class: research-queue-widget
+  source: |
+    <div class="research-queue" aria-label="Personal research follow-up queue">
+      <p class="research-queue-note">Save useful links from RADAR and COMMUNITY. Kept privately in this browser.</p>
+      <ul class="research-queue-items" aria-live="polite"></ul>
+      <div class="research-queue-footer"><span class="research-queue-status">Saved only in this browser</span><button type="button" class="reading-clear research-queue-clear-completed">Clear Read / Try</button></div>
+    </div>

@@ -863,6 +863,115 @@ function setupCommunityReadingList() {
     apply();
 }
 
+function setupResearchQueue() {
+    const panel = document.querySelector('.research-queue');
+    if (!panel) return;
+
+    const key = 'signal-desk:research-queue:v1';
+    const page = pageData.slug === 'community' ? 'COMMUNITY' : 'RADAR';
+    const statusOptions = ['Read', 'Try', 'Revisit'];
+    const queueRefreshEvent = 'research-queue-refresh';
+    const feedLinks = Array.from(document.querySelectorAll(
+        '.widget-type-rss .widget-content a.title[href], .widget-type-hacker-news .widget-content a.size-title-dynamic[href], .widget-type-lobsters .widget-content a.size-title-dynamic[href]'
+    ));
+    const candidates = feedLinks.filter((link) => {
+        const widget = link.closest('.widget');
+        return page === 'RADAR'
+            ? ['widget-type-rss', 'widget-type-hacker-news', 'widget-type-lobsters'].some((type) => widget?.classList.contains(type))
+            : ['Reddit · fresh community posts', 'Substack · essays worth reading'].includes(widget?.querySelector('.widget-header h2')?.textContent.trim());
+    });
+    const list = panel.querySelector('.research-queue-items');
+    const status = panel.querySelector('.research-queue-status');
+    let items;
+    try {
+        const saved = JSON.parse(localStorage.getItem(key) || '[]');
+        items = Array.isArray(saved) ? saved.filter((item) => item && typeof item.url === 'string' && typeof item.title === 'string' && statusOptions.includes(item.status)).slice(-100) : [];
+    } catch { items = []; }
+
+    const persist = () => {
+        try {
+            localStorage.setItem(key, JSON.stringify(items));
+            status.textContent = 'Saved only in this browser';
+        } catch { status.textContent = 'Browser storage unavailable'; }
+    };
+    const render = () => {
+        list.replaceChildren();
+        if (!items.length) {
+            const empty = document.createElement('li');
+            empty.className = 'research-queue-empty';
+            empty.textContent = 'No saved links yet. Add something useful from this page.';
+            list.append(empty);
+            candidates.forEach((candidate) => candidate.dispatchEvent(new CustomEvent(queueRefreshEvent)));
+            return;
+        }
+        items.forEach((item) => {
+            const row = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = item.url;
+            link.target = '_blank';
+            link.rel = 'noreferrer';
+            link.textContent = item.title;
+            const source = document.createElement('span');
+            source.className = 'research-queue-source';
+            source.textContent = item.source;
+            const controls = document.createElement('div');
+            controls.className = 'research-queue-controls';
+            const select = document.createElement('select');
+            select.setAttribute('aria-label', `Status for ${item.title}`);
+            statusOptions.forEach((option) => {
+                const choice = document.createElement('option');
+                choice.value = option;
+                choice.textContent = option;
+                choice.selected = item.status === option;
+                select.append(choice);
+            });
+            select.addEventListener('change', () => { item.status = select.value; persist(); });
+            const remove = document.createElement('button');
+            remove.type = 'button';
+            remove.className = 'reading-clear';
+            remove.textContent = 'Clear';
+            remove.setAttribute('aria-label', `Clear ${item.title}`);
+            remove.addEventListener('click', () => { items = items.filter((saved) => saved.url !== item.url); persist(); render(); });
+            controls.append(select, remove);
+            row.append(link, source, controls);
+            list.append(row);
+        });
+        candidates.forEach((candidate) => candidate.dispatchEvent(new CustomEvent(queueRefreshEvent)));
+    };
+
+    candidates.forEach((link) => {
+        const add = document.createElement('button');
+        add.type = 'button';
+        add.className = 'research-queue-add';
+        add.textContent = '＋ Queue';
+        add.setAttribute('aria-label', `Add ${link.textContent.trim()} to research queue`);
+        const refreshButton = () => {
+            const exists = items.some((item) => item.url === link.href);
+            add.disabled = exists;
+            add.textContent = exists ? 'Queued' : '＋ Queue';
+        };
+        add.addEventListener('click', () => {
+            if (items.some((item) => item.url === link.href)) return;
+            const source = link.closest('.widget')?.querySelector('.widget-header h2')?.textContent.trim() || page;
+            items.push({ title: link.textContent.trim(), url: link.href, source, status: 'Revisit' });
+            items = items.slice(-100);
+            persist();
+            render();
+        });
+        link.after(add);
+        link.addEventListener(queueRefreshEvent, refreshButton);
+        refreshButton();
+    });
+
+    const clearCompleted = panel.querySelector('.research-queue-clear-completed');
+    clearCompleted?.addEventListener('click', () => {
+        items = items.filter((item) => item.status === 'Revisit');
+        persist();
+        render();
+    });
+    render();
+}
+
 function enablePageRefresh() {
     const loadedAt = Date.now();
     let refreshing = false;
@@ -903,6 +1012,7 @@ async function setupPage() {
         updateVisitContext();
         setupPersonalDesk();
         setupCommunityReadingList();
+        setupResearchQueue();
         enablePageRefresh();
         restoreRefreshState();
     } finally {

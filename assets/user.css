@@ -87,6 +87,25 @@
 .reading-clear { border: 0; background: none; color: var(--color-primary); cursor: pointer; font: inherit; font-size: .7rem; }
 .reading-clear:hover { text-decoration: underline; }
 
+.research-queue-note { margin-bottom: .8rem; color: var(--color-text-subdue); font-size: .78rem; }
+.research-queue-items { display: grid; gap: .65rem; padding: 0; margin: 0; list-style: none; }
+.research-queue-items > li:not(.research-queue-empty) { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .25rem .75rem; align-items: center; padding-bottom: .6rem; border-bottom: 1px solid var(--color-widget-content-border); }
+.research-queue-items > li > a { min-width: 0; color: var(--color-text-base); font-size: .85rem; line-height: 1.35; }
+.research-queue-source { color: var(--color-text-subdue); font-size: .68rem; }
+.research-queue-controls { display: flex; grid-column: 2; grid-row: 1 / span 2; align-items: center; gap: .6rem; }
+.research-queue-controls select { padding: .3rem .4rem; border: 1px solid var(--color-widget-content-border); border-radius: .35rem; background: var(--color-widget-background); color: var(--color-text-base); font: inherit; font-size: .72rem; }
+.research-queue-add { display: inline-block; margin: .2rem 0 0 .2rem; padding: .15rem .4rem; border: 1px solid var(--color-widget-content-border); border-radius: .35rem; background: var(--color-widget-background); color: var(--color-primary); cursor: pointer; font: inherit; font-size: .65rem; white-space: nowrap; }
+.research-queue-add:disabled { color: var(--color-text-subdue); cursor: default; opacity: .8; }
+.research-queue-footer { display: flex; justify-content: space-between; align-items: center; gap: .5rem; margin-top: .8rem; }
+.research-queue-status { color: var(--color-text-subdue); font-size: .68rem; }
+.research-queue-empty { color: var(--color-text-subdue); font-size: .78rem; }
+.research-queue-widget .widget-header { align-items: center; }
+
+@media (max-width: 600px) {
+  .research-queue-items > li:not(.research-queue-empty) { gap: .3rem; }
+  .research-queue-controls { gap: .3rem; }
+}
+
 .render-allowances { display: grid; gap: 0.5rem; }
 .render-allowances h2 { color: var(--color-primary); }
 
