@@ -1,9 +1,12 @@
-- type: rss
-  title: Reddit · fresh community posts
-  cache: 30m
-  max-item-age: 2d
-  limit: 12
-  collapse-after: 6
-  feeds:
-    - url: https://www.reddit.com/r/selfhosted+ObsidianMD+LocalLLaMA/new/.rss?limit=30
-      title: Reddit communities
+- type: html
+  title: Reddit · direct community links
+  css-class: reddit-parked
+  source: |
+    <div class="reddit-parked" aria-label="Reddit RSS parked notice">
+      <p class="color-subdue">Reddit RSS is parked: Render's shared egress received HTTP 429 after a redeploy, so community posts are not fetched. No proxy, credentials, or cached copies are used.</p>
+      <ul>
+        <li><a href="https://www.reddit.com/r/selfhosted/" target="_blank" rel="noreferrer">r/selfhosted</a></li>
+        <li><a href="https://www.reddit.com/r/ObsidianMD/" target="_blank" rel="noreferrer">r/ObsidianMD</a></li>
+        <li><a href="https://www.reddit.com/r/LocalLLaMA/" target="_blank" rel="noreferrer">r/LocalLLaMA</a></li>
+      </ul>
+    </div>

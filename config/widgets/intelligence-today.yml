@@ -1,9 +1,10 @@
 - type: custom-api
   title: Decision brief · public signals
   url: http://127.0.0.1:8080/api/intelligence
-  cache: 3h
+  cache: 30m
   template: |
     <div class="intelligence-card">
-      <p class="color-subdue">Updated {{ .JSON.String "generated_at" }} · {{ if .JSON.Bool "data_fresh" }}fresh collection{{ else }}snapshot unavailable or stale{{ end }}</p>
-      {{ range .JSON.Array "brief" }}<p><strong>{{ .String "label" }}</strong> · <a href="{{ .String "url" }}">{{ .String "title" }}</a><br><span class="color-subdue">{{ .String "reason" }}</span></p>{{ else }}<p class="color-subdue">No supported decision signal in this collection window.</p>{{ end }}
+      {{ if eq (.JSON.String "delivery_status") "unavailable" }}<p class="color-subdue">Public snapshot unavailable</p>{{ else if eq (.JSON.String "delivery_status") "stale" }}<p class="color-subdue">Stale snapshot · collected {{ .JSON.String "generated_at" }} · last known state</p>{{ else }}<p class="color-subdue">Updated {{ .JSON.String "generated_at" }} · {{ if .JSON.Bool "data_fresh" }}fresh collection{{ else }}no fresh source data{{ end }}</p>{{ end }}
+      {{ range .JSON.Array "brief" }}<p><strong>{{ .String "label" }}</strong> · <a href="{{ if .String "source_url" }}{{ .String "source_url" }}{{ else }}{{ .String "url" }}{{ end }}">{{ .String "title" }}</a>{{ if .String "published_at" }} · <span class="color-subdue">{{ .String "published_at" }}</span>{{ end }}<br><span class="color-subdue">{{ .String "reason" }}</span></p>{{ else }}<p class="color-subdue">No supported decision signal in this collection window.</p>{{ end }}
+      {{ $alerts := .JSON.Array "alerts" }}{{ if $alerts }}{{ $alert := index $alerts 0 }}<p class="color-subdue">Attention · <a href="{{ $alert.String "url" }}">{{ $alert.String "title" }}</a> · <a href="/systems">health</a></p>{{ end }}
     </div>

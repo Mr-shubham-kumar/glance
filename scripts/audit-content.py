@@ -35,19 +35,25 @@ class Content(HTMLParser):
                 pass
 
 def report(label, owners):
-    # TODAY intentionally summarizes the same localhost container data owned by SYSTEMS.
-    collisions = {url: pages for url, pages in owners.items() if len(pages) > 1 and url != 'http://127.0.0.1:8080/api/instance-metrics'}
+    # Documented shared local endpoints: TODAY summarises the same container data as
+    # SYSTEMS (instance-metrics), and four pages read one local intelligence snapshot.
+    shared_local = {
+        'http://127.0.0.1:8080/api/instance-metrics',
+        'http://127.0.0.1:8080/api/intelligence',
+    }
+    collisions = {url: pages for url, pages in owners.items() if len(pages) > 1 and url not in shared_local}
     print(f'{label}: {len(owners)} unique URLs; {len(collisions)} cross-page duplicates')
     for url, pages in sorted(collisions.items()):
         print(f'  {url}  [{", ".join(sorted(pages))}]')
     return len(collisions)
 
 feeds = defaultdict(set)
+url_pattern = re.compile(r'^(?:\s*- url:|\s{2}url:) ["\']?(https?://[^"\'\s]+)', re.M)
 for page in PAGES:
     text = page.read_text(encoding='utf-8')
     for widget in re.findall(r'\$include: \.\./widgets/(\S+)', text):
         body = (ROOT / 'config/widgets' / widget).read_text(encoding='utf-8')
-        for url in re.findall(r'^\s+- url: (https?://\S+)', body, re.M):
+        for url in url_pattern.findall(body):
             feeds[url].add(page.stem)
 failures = report('Configured URLs', feeds)
 if '--live' in sys.argv or '--local' in sys.argv:

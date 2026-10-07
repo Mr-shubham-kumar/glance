@@ -67,7 +67,7 @@ The following bounded candidate set was assessed before implementation. The deci
 | Anthropic News | Primary lab | 5/5/4/4/2/4 | Link-only fallback: no suitable official feed verified; official Newsroom bookmark retained |
 | NVIDIA Technical Blog | Primary engineering | 4/4/3/3/5/5 | Not active: useful, but lower marginal value than the selected set |
 | Simon Willison Atom | Independent technical writing | 5/4/5/5/5/5 | Active |
-| MCP blog | Primary protocol ecosystem | 5/4/4/3/5/5 | Active |
+| MCP blog | Primary protocol ecosystem | 5/4/4/3/5/5 | Not active: not present in the current widget set; the MCP release Atom covers protocol releases |
 | GitHub Changelog | Primary product changes | 4/5/4/3/5/5 | Active |
 | LangChain changelog RSS | Primary project changes | 4/4/3/3/5/5 | Active on BUILD |
 | OpenCode release Atom | Primary repository | 5/4/5/5/5/5 | Active via public release feed |
@@ -76,7 +76,7 @@ The following bounded candidate set was assessed before implementation. The deci
 | OpenHands release Atom | Primary repository | 4/4/4/4/5/5 | Active on BUILD via public release feed |
 | Cline release Atom | Primary repository | 4/4/4/4/5/5 | Active on BUILD via public release feed |
 | Glance release Atom | Primary repository | 5/5/5/5/5/5 | Active via public release feed |
-| Glance community widgets commit Atom | Primary project activity | 4/5/4/4/5/5 | Active as a public commit feed |
+| Glance community widgets commit Atom | Primary project activity | 4/5/4/4/5/5 | Not active: not present in the current widget set |
 | llama.cpp release Atom | Primary repository | 5/4/5/4/5/5 | Active via public release feed |
 | Ollama release Atom | Primary repository | 4/4/4/4/5/5 | Active on BUILD via public release feed |
 | vLLM release Atom | Primary repository | 5/4/5/4/5/5 | Active via public release feed |
@@ -97,58 +97,47 @@ The following bounded candidate set was assessed before implementation. The deci
 | GitHub repository Search API | Community/open-source discovery | 4/4/3/4/1/2 | Rejected: unauthenticated Search quota is unreliable |
 | GitHub Trending RSS | Community/open-source discovery | 4/3/4/5/4/3 | Active through an explicitly labeled unofficial daily feed; official Trending remains linked |
 | OSS Insight trending API | Community/open-source discovery | 4/3/4/5/1/3 | Parked: provider reports its event-derived ranking unavailable since 2026-03-01 |
-| Reddit r/selfhosted RSS | Community discovery | 5/2/3/4/1/3 | Active through public RSS; native Reddit JSON remains parked because VPS-like egress is blocked |
+| Reddit r/selfhosted RSS | Community discovery | 5/2/3/4/1/3 | PARKED: public RSS returned 429 from Render's shared egress after a redeploy; an on-page notice with three direct subreddit links remains. Native Reddit JSON also stays parked because VPS-like egress is blocked |
 | OCI Cloud Infrastructure blog feed | Primary cloud engineering | 5/4/3/3/1/2 | Link-only fallback: public feed returned 403; official engineering page plus CNCF/OCI signals remain available |
 | OCI image-spec commit Atom | Primary specification activity | 4/5/3/3/5/5 | Active as a restrained change signal |
-| Docker blog RSS | Primary engineering | 4/4/3/3/5/5 | Active on SYSTEMS |
+| Docker blog RSS | Primary engineering | 4/4/3/3/5/5 | Not active: not present in the current widget set |
 | CIEchanow Atom | Independent technical writing | 3/4/3/3/5/2 | Rejected: latest observed entry was 2024-12-17 |
 | Martin Kleppmann feed candidates | Independent systems writing | 5/5/4/4/1/2 | Parked: candidate feed URLs returned 404 |
-| Generic AI news blogs | Secondary commentary | 2/2/1/2/2/2 | Bounded follow-up: WIRED AI RSS is active; The Batch is link-only because no feed was verified |
-| Markets, crypto, sports, games, media | Optional headlines and market context | 2/3/2/3/4/4 | Bounded follow-up: actual market data plus one headline per requested category on EXPLORE |
+| Generic AI news blogs | Secondary commentary | 2/2/1/2/2/2 | Not active: the bounded WIRED follow-up is not in the current widget set; The Batch remains link-only because no feed was verified |
+| Markets, crypto, sports, games, media | Optional headlines and market context | 2/3/2/3/4/4 | Bounded: actual market data on TODAY (market-pulse) and world/business/science news on DISCOVERY |
 | Weather without an existing location | Personal convenience | 1/1/1/1/5/5 | Parked: no location was guessed |
 | Private calendars, tasks, chat, host telemetry | Private/personal | 5/5/5/5/1/1 | Prohibited on a public dashboard without existing safe authentication |
 
 ## Implemented source inventory
 
+Verified against `config/widgets/` on 2026-10-07.
+
 | Track | Source | Why it exists | Glance mechanism | Cache / limit | Known failure mode |
 |---|---|---|---|---|---|
-| AI frontier | OpenAI News | First-party model and product announcements | RSS | 2h; 1 item on TODAY/RADAR | Feed availability or slow first-party response |
-| AI frontier | Google DeepMind | First-party frontier model research and releases | RSS | 2h; 1 item | Feed redirects or temporary fetch errors |
-| AI frontier | Google Research | Research direction and reproducibility context beyond product announcements | RSS | 2h; 1 item | Occasional low-cadence entries |
-| AI frontier | Mistral News | Open-weight and agent-relevant first-party updates | RSS | 2h; up to 2 items | Legacy URL redirected; canonical URL is required |
-| AI frontier | Hugging Face blog | Model, dataset, inference, and tooling ecosystem changes | RSS | 2h; up to 2 items | Large feed; per-feed cap prevents dominance |
-| Builders | Simon Willison | High-signal independent analysis and practical model/tool notes | RSS | 2h on TODAY; 12h on EXPLORE | Low or irregular posting cadence |
-| Builders | MCP blog | Protocol changes and ecosystem explanations from maintainers | RSS | 2h; 1 item | Lower posting frequency than social discussion |
-| Builders | GitHub Changelog | Concrete platform changes that affect agent and repository workflows | RSS | 2h; 2 items | Marketing/product volume is capped per feed |
-| Builders | LangChain changelog | Agent framework changes with a maintained RSS endpoint | RSS | 6h; 1 item | Changelog can be release-oriented rather than explanatory |
-| Research | arXiv cs.AI | Early direction signal for agents and models | RSS | 24h; 2 items, 4 total | Preprints are not peer-reviewed; feed is high volume |
-| Research | arXiv cs.SE | Early software-engineering and agent-evaluation signal | RSS | 24h; 2 items, 4 total | Preprints are not peer-reviewed |
-| Community | Hacker News best + engagement | Small discovery surface with ranking and discussion | Native HN group | 15m; 4-5 items | Popularity is a discovery signal, not evidence |
-| Community | Lobsters tagged engineering | Deeper discussion for AI, programming, DevOps, and Linux | Native Lobsters group | 15m; 4-5 items | Tag filtering can hide a relevant untagged post |
-| Community | Reddit r/selfhosted RSS | Public self-hosting discovery without Reddit credentials | RSS | 1h; 4 items | Reddit can return 429 from shared VPS-like egress; the native widget remains parked |
-| Open source | GitHub Trending unofficial RSS | Daily public repository discovery when the official page is not machine-readable | RSS | 6h; 6 items | Third-party generator; feed is not an official GitHub ranking API |
-| AI secondary | WIRED AI RSS | Bounded context beyond first-party lab feeds | RSS | 3h; 4 items | Secondary reporting; not a replacement for primary sources |
-| Markets | SPY, BTC-USD, ETH-USD | Actual market and crypto context with native sparklines | Native markets widget | 30m; 3 symbols | Yahoo chart endpoint can throttle or change independently of Glance |
-| Optional headlines | MarketWatch, CoinDesk, Guardian sports/culture | One bounded headline each for requested non-core categories | RSS | 2h; 1 item per feed | Editorial feeds are low-priority and may change cadence or terms |
-| Open source | OpenCode, Codex, MCP, OpenHands, Cline | Release-level changes in coding-agent tooling | Public GitHub release Atom feeds | 2h; 1 item per repository, 6 total | Atom feeds include release entries that the native API may classify as prereleases; web feed throttling |
-| Open source | Glance and community-widgets | Maintainer and ecosystem changes relevant to this deployment | Public Glance release Atom plus community commit Atom | 2h/6h; 1-3 items | Public web feeds can throttle; no API credential is required |
-| Inference | llama.cpp, Ollama, vLLM, Transformers | Meaningful runtime and model-tooling changes | Public GitHub release Atom feeds | 2h; 1 item per repository, 4 total | Automated release cadence can be noisy; release entries may be prereleases |
-| Systems | Cloudflare | High-signal production infrastructure and security engineering | RSS | 6h/12h; 1-2 items | Corporate publishing volume is capped |
-| Systems | Kubernetes | Primary cluster and platform engineering changes | RSS | 6h; 1 item | Release notes can be operational rather than conceptual |
-| Systems | Tailscale | Practical networking, identity, and infrastructure engineering | RSS | 6h/12h; 1-2 items | Blog cadence varies |
-| Systems | CNCF | Cloud-native and OCI-adjacent engineering signal | RSS | 6h; 1 item | Broader ecosystem than OCI specifically |
-| Systems | Raspberry Pi | Hardware, local compute, and practical Pi changes | RSS | 6h/12h; 1 item | Feed includes non-technical company news |
-| Self-hosting | selfh.st | High-signal practical self-hosting writing | RSS | 6h/12h; 1-2 items | Low volume; no feed means no filler |
-| Hardware | ServeTheHome | Measured servers, networking, storage, and low-resource hardware | RSS | 12h; 2 items | Review and product news can be slower |
-| Learning | Andrej Karpathy, Latent Space, Two Minute Papers | Demonstrations, analysis, and measured model work | Native videos | 3h; 6 merged items, Shorts off | YouTube feed throttling or channel cadence |
-| Learning | Jeff Geerling, Hardware Haven, Techno Tim, Lawrence Systems | Practical Raspberry Pi, hardware, homelab, and infrastructure demonstrations | Native videos | 3h; 8 merged items, Shorts off | Video thumbnails and feeds are external dependencies |
-| Health | GitHub status summary | Actual provider status indicator and unresolved incident names | Official community `custom-api` pattern | 5m | Provider API outage; isolated to one widget |
-| Health | Glance `/api/healthz` | Real deployed service reachability | Native monitor | 5m | Render cold start or public URL outage |
-| Reachability | Render, GitHub, OpenAI, OCI status pages | Confirms that public status pages are reachable; not a substitute for parsed incident state | Native monitor | 5m | A status page can return HTTP 200 during an incident, so the label is deliberately “reachability” |
+| AI frontier | OpenAI News, Google DeepMind, Google Research, Mistral, Hugging Face blog | First-party model and product announcements | RSS (RADAR · radar-frontier) | 2h; 7 merged items | Feed redirects or temporary first-party errors |
+| Research | arXiv cs.AI, arXiv cs.SE | Early direction signal for agents and models | RSS (RADAR · radar-research) | 24h; 4 items | Preprints are not peer-reviewed; feed is high volume |
+| Community | Hacker News engagement feed | Small discovery surface with discussion | Native HN group (RADAR) | 15m; 4 items | Popularity is a discovery signal, not evidence |
+| Community | Lobsters tagged engineering | Deeper discussion for programming, DevOps, Linux | Native Lobsters group (RADAR) | 15m; 4 items | Tag filtering can hide a relevant untagged post |
+| Community | Reddit r/selfhosted, r/ObsidianMD, r/LocalLLaMA | Direct subreddit navigation without credentials | Parked notice with direct links (COMMUNITY) | n/a; 3 links, nothing fetched | Public RSS returned 429 from Render's shared egress |
+| Substack | Experimental History, Construction Physics | Original long-form essays | RSS (COMMUNITY) | 2h; 4 items | Low cadence; quiet weeks show nothing rather than filler |
+| Releases | OpenCode, Codex, MCP, OpenHands, Cline, Glance | Source-authored coding-agent release notes | Public GitHub releases.atom (BUILD · agent-releases) | 2h; 6 items | Atom feeds can include prereleases; web-feed throttling |
+| Releases | llama.cpp, Ollama, vLLM, Transformers | Runtime and model-tooling changes | Public releases.atom (BUILD · inference-releases) | 2h; 4 items | Automated release cadence can be noisy |
+| Engineering | GitHub changelog, Cloudflare, CNCF, Kubernetes, Tailscale, OCI image-spec commits, LangChain | Platform and infrastructure changes | RSS (BUILD · build-notes) | 6h; 10 items | Marketing/product volume is capped per feed |
+| Experiments | Public repositories and official docs named in the experiment queue | Navigation aid for what to try next | Bookmarks (BUILD · experiment-links) | static links | Not a task manager; no automation or scoring |
+| Trending | Unofficial GitHub Trending RSS (All/Go/Python/TypeScript) | Daily repository discovery with official category links | RSS (GITHUB) | 12h; 8 items | Third-party generator; not an official GitHub ranking API |
+| News | BBC World, BBC India, BBC Business, Phys.org Science | Bounded world/business/science headlines | RSS (DISCOVERY · discover-news) | 30m; 8 items | Editorial cadence; discovery context, not decision signals |
+| Discover | Perplexity Discover picks | Curated discovery grid linking to publishers | Extension (DISCOVERY) | 1m; page-bounded | Third-party page structure can change |
+| Learning | Seven verified YouTube channels (AI demonstrations, Karpathy, hardware/systems) | Demonstrations and measured engineering work | Native videos (EXPLORE) | 3h; 6 + 3 + 8 items, Shorts off | YouTube feed throttling or channel cadence |
+| Long-form | Simon Willison, Julia Evans, selfh.st, ServeTheHome, Raspberry Pi | Slower independent technical essays | RSS (EXPLORE · longform) | 12h; 10 items | Low or irregular posting cadence |
+| Reading | Our World in Data, Quanta, Literary Hub | Human sciences, research explanation, books | RSS (THINK) | 12h; 4 items | Subject mix; bounded per feed |
+| Markets | SPY, BTC-USD, ETH-USD | Actual market and crypto context with native sparklines | Native markets (TODAY · market-pulse) | 30m; 3 symbols | Yahoo chart endpoint can throttle or change independently |
+| Deployment | This container cgroup, compact deployment summary, Glance healthz, GitHub status | Actual local resource use and provider health | custom-api + monitor (TODAY/SYSTEMS) | 2m–5m | Sleep/deploy resets samples; provider status can lag |
+| Reachability | Render, GitHub, OpenAI, OCI status pages | Confirms that public status pages respond; not parsed incident state | Bookmarks (SYSTEMS · safe-links) | static links | A status page can return HTTP 200 during an incident |
+| Intelligence | Nine public feeds plus three official free-tier documents, via the scheduled collector | Source-health ledger, evidence-backed radar, release-to-experiment matches, free-tier review requests, three-line brief | GitHub Action → `signal-data` branch → `/api/intelligence` cards (TODAY/RADAR/BUILD/SYSTEMS) | Snapshot 3×/day; cards 30m | Per-source failures appear in the health ledger; stale or unavailable snapshots are labeled and never served as fresh recommendations |
 
 The first production deploy exposed a second-order constraint: Render's shared egress IP had exhausted GitHub's unauthenticated API quota, so native `releases` and `repository` widgets rendered errors even though their public GitHub web endpoints were healthy. They were replaced with the repository owners' public `releases.atom` and `commits/*.atom` feeds. This preserves primary release evidence without copying a broad personal token into a public Render service.
 
-The follow-up implementation adds only bounded public fallbacks where the original source remains unavailable: Reddit's public r/selfhosted Atom feed, an explicitly unofficial GitHub Trending RSS generator, a secondary WIRED AI feed, actual Yahoo market data, and one headline each from markets, crypto, sports, and culture. Anthropic Newsroom, The Batch, and OCI engineering are official link-only fallbacks because no usable official feed was verified. Weather and home telemetry remain blocked on user-supplied location/access details.
+The follow-up implementation adds only bounded public fallbacks where the original source remains unavailable: an explicitly unofficial GitHub Trending RSS generator, a secondary bounded news surface on DISCOVERY, actual Yahoo market data, and direct subreddit links after Reddit RSS was parked. Anthropic Newsroom, The Batch, and OCI engineering are official link-only fallbacks because no usable official feed was verified. Weather and home telemetry remain blocked on user-supplied location/access details.
 
 ## Maintenance rules
 

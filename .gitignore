@@ -5,3 +5,6 @@
 /playground
 /.idea
 /glance*.yml
+/User_feedback
+__pycache__/
+

@@ -7,12 +7,15 @@ import hashlib
 import html
 import json
 import re
+import time
 import urllib.request
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 UTC = dt.timezone.utc
+RETRY_ATTEMPTS = 2
+RETRY_BACKOFF = 1.0
 FEEDS = [
     ("openai", "OpenAI", "lab", "https://openai.com/news/rss.xml", 1080),
     ("deepmind", "Google DeepMind", "lab", "https://deepmind.google/blog/rss.xml", 1080),
@@ -78,6 +81,20 @@ def fetch(url):
     return data
 
 
+def fetch_with_retry(fetcher, url):
+    """Retry transient failures once; deterministic errors are not retried."""
+    for attempt in range(RETRY_ATTEMPTS):
+        try:
+            return fetcher(url)
+        except ValueError:
+            raise
+        except Exception:
+            if attempt == RETRY_ATTEMPTS - 1:
+                raise
+            if RETRY_BACKOFF:
+                time.sleep(RETRY_BACKOFF)
+
+
 def child_text(node, names):
     for c in node:
         if c.tag.rsplit("}", 1)[-1] in names:
@@ -135,7 +152,7 @@ def build_snapshot(previous, weekly=False, fetcher=fetch):
         sid, name, kind, url, max_age = source
         old = prior_sources.get(sid, {})
         try:
-            parsed = parse_feed(fetcher(url), source)
+            parsed = parse_feed(fetch_with_retry(fetcher, url), source)
             if not parsed:
                 raise ValueError("no dated, linked entries")
             for item in parsed:
@@ -217,19 +234,27 @@ def build_snapshot(previous, weekly=False, fetcher=fetch):
         radar = previous.get("items", {}).get("radar", [])
         matches = previous.get("items", {}).get("experiments", [])
     brief = []
+    generated_at = now_iso()
     if radar and fresh:
-        brief.append({"label": "Investigate", "title": radar[0]["title"], "url": "/radar", "reason": radar[0]["reason"]})
+        brief.append({"label": "Investigate", "title": radar[0]["title"], "url": "/radar",
+                      "source_url": radar[0]["url"], "published_at": radar[0]["published_at"],
+                      "reason": radar[0]["reason"]})
     if matches and fresh:
-        brief.append({"label": "Try", "title": matches[0]["experiment"], "url": "/build", "reason": matches[0]["reason"]})
+        brief.append({"label": "Try", "title": matches[0]["experiment"], "url": "/build",
+                      "source_url": matches[0]["url"], "published_at": matches[0]["published_at"],
+                      "reason": matches[0]["reason"]})
     if alerts:
-        brief.append({"label": "Check", "title": alerts[0]["title"], "url": "/systems", "reason": alerts[0]["reason"]})
-    return {"schema_version": 1, "generated_at": now_iso(), "data_fresh": bool(fresh),
+        brief.append({"label": "Check", "title": alerts[0]["title"], "url": "/systems",
+                      "source_url": alerts[0]["url"], "published_at": generated_at,
+                      "reason": alerts[0]["reason"]})
+    return {"schema_version": 1, "generated_at": generated_at, "data_fresh": bool(fresh),
             "sources": sources, "items": {"radar": radar[:3], "experiments": matches[:5]},
             "alerts": alerts[:10], "brief": brief[:3], "docs": docs, "cache": cache,
             "receipt": {"input_count": sum(s["input_count"] for s in sources if s["status"] != "failed"),
                         "unique_count": len(unique), "radar_count": len(radar), "experiment_count": len(matches),
                         "excluded_count": max(0, len(unique) - len(recent)),
-                        "failed_sources": sum(s["status"] == "failed" for s in sources)}}
+                        "failed_sources": sum(s["status"] == "failed" for s in sources),
+                        "stale_sources": sum(s["status"] == "stale" for s in sources)}}
 
 
 def main():

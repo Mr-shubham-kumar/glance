@@ -132,3 +132,9 @@
     padding: 0.75rem;
   }
 }
+
+.intelligence-card { display: grid; gap: 0.55rem; }
+.intelligence-card p { margin: 0; }
+.reddit-parked { display: grid; gap: 0.6rem; }
+.reddit-parked p { margin: 0; }
+.reddit-parked ul { display: grid; gap: 0.25rem; margin: 0; padding-left: 1.1rem; }

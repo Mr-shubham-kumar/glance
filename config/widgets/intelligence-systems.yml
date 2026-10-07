@@ -1,10 +1,10 @@
 - type: custom-api
   title: Signal pipeline · source health
   url: http://127.0.0.1:8080/api/intelligence
-  cache: 3h
+  cache: 30m
   template: |
     <div class="intelligence-card">
-      <p>Collected {{ .JSON.String "generated_at" }} · {{ .JSON.Int "receipt.input_count" }} inputs · {{ .JSON.Int "receipt.unique_count" }} unique · {{ .JSON.Int "receipt.failed_sources" }} failed sources</p>
+      {{ if eq (.JSON.String "delivery_status") "unavailable" }}<p>Collection unavailable · no snapshot verified yet</p>{{ else }}<p>Collected {{ .JSON.String "generated_at" }} · {{ .JSON.Int "receipt.input_count" }} inputs · {{ .JSON.Int "receipt.unique_count" }} unique · {{ .JSON.Int "receipt.failed_sources" }} failed · {{ .JSON.Int "receipt.stale_sources" }} stale sources</p>{{ end }}
       {{ range .JSON.Array "alerts" }}<p><a href="{{ .String "url" }}">{{ .String "title" }}</a><br><span class="color-subdue">{{ .String "reason" }}</span></p>{{ else }}<p class="color-positive">No source or free-tier checks need attention.</p>{{ end }}
       <details><summary>Source receipt</summary>{{ range .JSON.Array "sources" }}<p><a href="{{ .String "url" }}">{{ .String "name" }}</a> · {{ .String "status" }} · {{ .Int "input_count" }} entries · last success {{ .String "last_success_at" }}</p>{{ end }}</details>
       <p class="color-subdue">Public source checks only. <a href="https://dashboard.render.com/billing#included-usage">Check actual Render usage ↗</a></p>

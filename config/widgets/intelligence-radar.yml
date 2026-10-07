@@ -1,9 +1,9 @@
 - type: custom-api
   title: Evidence-backed developments
   url: http://127.0.0.1:8080/api/intelligence
-  cache: 3h
+  cache: 30m
   template: |
     <div class="intelligence-card">
-      <p class="color-subdue">Public sources · collected {{ .JSON.String "generated_at" }}{{ if not (.JSON.Bool "data_fresh") }} · last known evidence{{ end }}</p>
+      {{ if eq (.JSON.String "delivery_status") "unavailable" }}<p class="color-subdue">Public snapshot unavailable</p>{{ else }}<p class="color-subdue">Public sources · collected {{ .JSON.String "generated_at" }}{{ if not (.JSON.Bool "data_fresh") }} · last known evidence{{ end }}</p>{{ end }}
       {{ range .JSON.Array "items.radar" }}<p><a href="{{ .String "url" }}">{{ .String "title" }}</a><br><span class="color-subdue">{{ .String "source" }} · {{ .String "published_at" }} · {{ .String "reason" }}{{ if .String "corroborating_url" }} · <a href="{{ .String "corroborating_url" }}">second source</a>{{ end }}</span></p>{{ else }}<p class="color-subdue">No supported developments in the last 48 hours.</p>{{ end }}
     </div>

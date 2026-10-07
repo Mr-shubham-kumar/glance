@@ -6,6 +6,7 @@ from pathlib import Path
 spec = importlib.util.spec_from_file_location("collector", Path(__file__).with_name("collect-intelligence.py"))
 collector = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(collector)
+collector.RETRY_BACKOFF = 0
 
 
 def atom(title, link, summary="A substantive source-authored release note for testing RPC on Windows"):
@@ -66,6 +67,87 @@ class CollectorTests(unittest.TestCase):
                 f'<link href="https://example.com/release"/><updated>{old}</updated></entry></feed>').encode()
         result = collector.build_snapshot({}, fetcher=lambda url: feed)
         self.assertTrue(all(s["status"] == "ok" for s in result["sources"] if s["kind"] == "release"))
+
+    def test_mixed_partial_failure_keeps_fresh_sources_and_cache(self):
+        previous = collector.build_snapshot({}, fetcher=lambda url: atom("Source announcement", "https://example.com/item-" + url))
+
+        def fetcher(url):
+            if "rss.arxiv.org/rss/cs.AI" in url:
+                raise TimeoutError()
+            return atom("Fresh announcement", "https://example.com/fresh-" + url)
+
+        result = collector.build_snapshot(previous, fetcher=fetcher)
+        self.assertTrue(result["data_fresh"])
+        self.assertEqual(result["receipt"]["failed_sources"], 1)
+        self.assertEqual(result["receipt"]["stale_sources"], 0)
+        failed = next(s for s in result["sources"] if s["id"] == "arxiv-ai")
+        prior_arxiv = next(s for s in previous["sources"] if s["id"] == "arxiv-ai")
+        self.assertEqual(failed["status"], "failed")
+        self.assertEqual(failed["error"], "TimeoutError")
+        self.assertEqual(failed["last_success_at"], prior_arxiv["last_success_at"])
+        self.assertEqual(failed["input_count"], 1)
+        self.assertTrue(any(a["kind"] == "source" and "arXiv cs.AI" in a["title"] for a in result["alerts"]))
+
+    def test_stale_lab_source_is_counted_and_alerted(self):
+        old = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=5)).isoformat()
+        feed = (f'<feed xmlns="http://www.w3.org/2005/Atom"><entry><title>Old announcement</title>'
+                f'<link href="https://example.com/old"/><updated>{old}</updated></entry></feed>').encode()
+        result = collector.build_snapshot({}, fetcher=lambda url: feed)
+        stale = [s for s in result["sources"] if s["status"] == "stale"]
+        self.assertEqual([s["id"] for s in stale], ["arxiv-ai", "arxiv-se"])
+        self.assertEqual(result["receipt"]["stale_sources"], 2)
+        self.assertEqual(result["receipt"]["failed_sources"], 0)
+        self.assertTrue(any("stale" in a["title"] for a in result["alerts"]))
+
+    def test_duplicate_url_across_sources_counts_once_and_keeps_first_seen(self):
+        def fetcher(url):
+            return atom("Shared story", "https://example.com/shared")
+        first = collector.build_snapshot({}, fetcher=fetcher)
+        self.assertEqual(first["receipt"]["unique_count"], 1)
+        self.assertEqual(first["receipt"]["input_count"], len(collector.FEEDS))
+        second = collector.build_snapshot(first, fetcher=fetcher)
+        self.assertEqual(second["receipt"]["unique_count"], 1)
+        self.assertEqual(second["cache"]["openai"][0]["first_seen_at"], first["cache"]["openai"][0]["first_seen_at"])
+
+    def test_brief_has_dated_source_urls_and_investigate_first(self):
+        def fetcher(url):
+            if "releases.atom" in url:
+                project = url.split("/")[4]
+                return atom("v1.2", f"https://example.com/{project}/release")
+            return atom("A new agent protocol", "https://example.com/research")
+        result = collector.build_snapshot({}, fetcher=fetcher)
+        labels = [line["label"] for line in result["brief"]]
+        self.assertEqual(labels[0], "Investigate")
+        self.assertLessEqual(len(result["brief"]), 3)
+        for line in result["brief"]:
+            self.assertTrue(line["source_url"].startswith("https://"))
+            self.assertTrue(line["published_at"])
+            self.assertTrue(line["reason"])
+            self.assertTrue(line["url"].startswith("/"))
+
+    def test_transient_failure_is_retried_once(self):
+        attempts = {"count": 0}
+
+        def fetcher(url):
+            attempts["count"] += 1
+            if attempts["count"] == 1:
+                raise TimeoutError()
+            return atom("Source announcement", "https://example.com/item-" + url)
+
+        result = collector.build_snapshot({}, fetcher=fetcher)
+        self.assertEqual(result["receipt"]["failed_sources"], 0)
+        self.assertEqual(attempts["count"], len(collector.FEEDS) + 1)
+
+    def test_deterministic_error_is_not_retried(self):
+        attempts = {"count": 0}
+
+        def fetcher(url):
+            attempts["count"] += 1
+            raise ValueError("response exceeds 2 MB")
+
+        result = collector.build_snapshot({}, fetcher=fetcher)
+        self.assertEqual(attempts["count"], len(collector.FEEDS))
+        self.assertEqual(result["receipt"]["failed_sources"], len(collector.FEEDS))
 
 
 if __name__ == "__main__":

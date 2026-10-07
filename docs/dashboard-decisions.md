@@ -1,5 +1,11 @@
 # Signal Desk dashboard decisions
 
+## Signal intelligence + ninth page · 2026-10-07
+
+- The dashboard now has **nine pages**: DISCOVERY (added after the v5 note that placed the four news feeds on TODAY) owns the Perplexity Discover extension and the BBC/Phys.org news grid; TODAY keeps only a link card to it. The ownership table in [content-ownership.md](content-ownership.md) is the current contract.
+- The five public-only intelligence layers run from one scheduled collector (`scripts/collect-intelligence.py`, three runs daily, official free-tier document checks on Mondays) that publishes a schema-1 snapshot to the isolated `signal-data` branch, so collection never triggers a Render deploy. `GET /api/intelligence` validates the whole snapshot contract (schema version, required arrays and objects, no future timestamps), caches it for 30 minutes with the fetch performed outside the request lock, and serves explicit `stale` and `unavailable` fallbacks that clear recommendations and prepend a delivery alert. The four intelligence cards use 30-minute widget caches so a stale verdict reaches rendered HTML promptly. Layer ownership: TODAY owns the three-line brief (each line carries a dated source URL), RADAR the evidence-backed items, BUILD release-to-experiment matches, SYSTEMS the source-health ledger and free-tier review alerts.
+- Reddit RSS remains parked: COMMUNITY renders an explicit 429 notice with three direct subreddit links instead of a live feed, matching the v4 decision. `scripts/audit-content.py` now also audits top-level widget endpoints (the four `/api/intelligence` cards and the shared instance-metrics pair) and exempts the two documented shared local endpoints.
+
 ## Personal desk redesign · 2026-10-01
 
 - TODAY is an intent-led desk: four paths into existing pages, three editable focus lines kept in browser local storage, and a Discover-style news grid. This adds a personal starting point without putting Gmail, calendar, vault, or work data on the public server. Clearing browser site data removes the focus lines; another browser or device does not share them.
@@ -26,7 +32,7 @@ The user approved six targeted improvements and requested a more intelligible Re
 
 ## Historical architecture · v2 (2026-09-25)
 
-Real usage exposed overlapping TODAY/RADAR/BUILD/EXPLORE stories and broken YouTube uploads-only playlists. The seven-page ownership contract is in [content-ownership.md](content-ownership.md). This section supersedes the v1 descriptions below, retained only as deployment history.
+Real usage exposed overlapping TODAY/RADAR/BUILD/EXPLORE stories and broken YouTube uploads-only playlists. The ownership contract (seven pages at v2; nine as of 2026-10-07) is in [content-ownership.md](content-ownership.md). This section supersedes the v1 descriptions below, retained only as deployment history.
 
 - TODAY is calm date/search, market context, safe links and authenticated-at-source Gmail/Calendar bookmarks; no private data or repeated feeds.
 - RADAR owns lab news, preprints and HN/Lobsters. The Reddit RSS fallback is parked after repeated 429s from Render.
