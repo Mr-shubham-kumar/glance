@@ -149,6 +149,31 @@ class CollectorTests(unittest.TestCase):
         self.assertEqual(attempts["count"], len(collector.FEEDS))
         self.assertEqual(result["receipt"]["failed_sources"], len(collector.FEEDS))
 
+    def test_parse_failure_is_retried_once(self):
+        attempts = {"count": 0}
+
+        def fetcher(url):
+            attempts["count"] += 1
+            if attempts["count"] == 1:
+                return b"<feed><entry>"
+            return atom("Source announcement", "https://example.com/item-" + url)
+
+        result = collector.build_snapshot({}, fetcher=fetcher)
+        self.assertEqual(result["receipt"]["failed_sources"], 0)
+        self.assertEqual(attempts["count"], len(collector.FEEDS) + 1)
+
+    def test_persistent_parse_failure_gives_up_after_one_retry(self):
+        attempts = {"count": 0}
+
+        def fetcher(url):
+            attempts["count"] += 1
+            return b"<feed><entry>"
+
+        result = collector.build_snapshot({}, fetcher=fetcher)
+        self.assertEqual(result["receipt"]["failed_sources"], len(collector.FEEDS))
+        self.assertEqual(attempts["count"], 2 * len(collector.FEEDS))
+        self.assertTrue(all(s["error"] == "ParseError" for s in result["sources"]))
+
 
 if __name__ == "__main__":
     unittest.main()

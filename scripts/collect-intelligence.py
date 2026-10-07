@@ -125,6 +125,23 @@ def parse_feed(data, source):
     return records[:25]
 
 
+def collect_source(fetcher, source):
+    """Fetch and parse one feed, retrying transient fetch or parse failures once."""
+    for attempt in range(RETRY_ATTEMPTS):
+        try:
+            parsed = parse_feed(fetch_with_retry(fetcher, source[3]), source)
+            if not parsed:
+                raise ValueError("no dated, linked entries")
+            return parsed
+        except ValueError:
+            raise
+        except ET.ParseError:
+            if attempt == RETRY_ATTEMPTS - 1:
+                raise
+            if RETRY_BACKOFF:
+                time.sleep(RETRY_BACKOFF)
+
+
 def tokens(title):
     stop = {"the", "and", "for", "with", "from", "new", "using", "release", "version", "model", "openai"}
     return {w for w in re.findall(r"[a-z0-9]{3,}", title.lower()) if w not in stop}
@@ -152,9 +169,7 @@ def build_snapshot(previous, weekly=False, fetcher=fetch):
         sid, name, kind, url, max_age = source
         old = prior_sources.get(sid, {})
         try:
-            parsed = parse_feed(fetch_with_retry(fetcher, url), source)
-            if not parsed:
-                raise ValueError("no dated, linked entries")
+            parsed = collect_source(fetcher, source)
             for item in parsed:
                 item["first_seen_at"] = prior_urls.get(item["url"], {}).get("first_seen_at", now_iso())
             cache[sid] = parsed
