@@ -85,6 +85,18 @@ The page is link-only: it never fetches the apps, so it cannot duplicate a feed 
 
 MY APPS adds no configured URL and no rendered-link collision, so it is a neutral addition to the audit.
 
+## Functional verification of the five apps
+
+Beyond HTTP status, each app was exercised with a representative operation:
+
+- **RSSHub**: `GET /hackernews/best?key=…` and `GET /v2ex/topics/latest?key=…` returned HTTP 200 with real `<rss>` feeds and items; the same routes without `?key=` returned `403`, confirming `ACCESS_KEY` is enforced. A GitHub API-backed route returned RSSHub's graceful error page (`FetchError … 403`) because GitHub rate-limits Render's shared egress. One heavy route crashed the Node process (`server_failed` at 10:55:42Z); Render restarted it (`server_available` at 10:55:47Z, ~5 s) and the service continued serving feeds.
+- **Apprise**: the first request cold-started (502), then `401` without credentials and `200` with Basic auth, serving the Apprise web UI — the authorized operation works.
+- **CyberChef**: served the v11.5.0 UI ("CyberChef — The Cyber Swiss Army Knife", built 14/10/2026).
+- **BentoPDF**: served the privacy-first PDF toolkit page with its cross-origin-isolation headers.
+- **VERT**: served the SvelteKit app shell with its immutable bundles.
+
+Client-side processing (PDF editing, WASM conversions) runs in the visitor's browser and is out of reach of command-line checks; the application bundles are present and the pages load.
+
 ## Artifacts produced
 
 - `render.yaml` — Blueprint for all six services (secrets `sync: false`).

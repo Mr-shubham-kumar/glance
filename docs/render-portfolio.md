@@ -82,25 +82,28 @@ The whole portfolio is defined in [`render.yaml`](../render.yaml) at the repo ro
 
 | Check | Result |
 |---|---|
-| `signal-rsshub` | HTTP 200 |
-| `signal-bentopdf` | HTTP 200, COOP/COEP headers present |
-| `signal-cyberchef` | HTTP 200 |
-| `signal-vert` | HTTP 200 |
-| `signal-apprise` | HTTP 401 (auth active) |
+| `signal-rsshub` | HTTP 200; real RSS from `/hackernews/best` and `/v2ex/topics/latest`; `403` without the `key` |
+| `signal-bentopdf` | HTTP 200, COOP/COEP headers present, correct app title/UI |
+| `signal-cyberchef` | HTTP 200, serves the CyberChef v11.5.0 interface |
+| `signal-vert` | HTTP 200, SvelteKit bundles present |
+| `signal-apprise` | HTTP 401 without credentials; HTTP 200 with Basic auth (authorized operation) |
 | `glance` | HTTP 200 |
 | `go run . --config config/glance.yml config:validate` | exit 0 |
 | `go vet ./...` / `go test ./...` | exit 0 |
 | `scripts/audit-content.py` | 0 cross-page duplicate configured URLs |
 | `render blueprints validate render.yaml` | `valid: true` |
 | Live `GET /api/pages/apps/content/` | HTTP 200, all five app links, 0 widget errors |
-| Live deploy | `dep-db7ls2g473hc73droup0` on commit `052387c`, status `live` |
+| Verified live deploy | `dep-db7ltkjncjis73epnhm0` on commit `5a84f7e`, status `live` |
+
+These are reachability + representative-operation checks. Deeper in-browser function (PDF editing, WASM conversions) runs client-side and cannot be exercised from a command line; the served application bundles are present and the pages load.
 
 `audit-content.py --live --smoke` reports the new `apps` page clean but still exits non-zero on two pre-existing conditions unrelated to it: BUILD has no source-authored release descriptions (upstream release timing), and `https://rss.arxiv.org/rss/cs.AI` renders on both `today` and `systems`. MY APPS adds no configured URL or rendered-link collision.
 
 ## Known limitations
 
 - Glance GitHub auto-deploy is currently not firing (no deploy on push since 2026-10-01, commit `511b617`); the service is otherwise correctly configured. Deploys are triggered manually via the Render API until the GitHub App/webhook is reconnected. This affects deploy automation only, not the running service.
-- Free web services sleep after ~15 minutes idle and cold-start in up to ~1 minute; a sleeping app is not unhealthy.
+- RSSHub on the 512 MB free instance is route-dependent: a heavy route can crash the process (`server_failed`), after which Render restarts it in a few seconds (`server_available` ~5 s later). The service itself is healthy; routes vary by upstream, and GitHub API-backed routes currently return a graceful error because GitHub rate-limits Render's shared egress.
+- Free web services sleep after ~15 minutes idle and cold-start in up to ~1 minute (Apprise returned a transient 502 on the first cold request, then 200/401); a sleeping app is not unhealthy.
 - RSSHub route reliability varies by upstream; heavy/Chromium routes are not reliable on 512 MB.
 - Apprise cannot email directly (Render blocks outbound SMTP).
 - VERT's vertd-dependent conversions are disabled by design.
