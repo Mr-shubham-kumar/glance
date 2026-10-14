@@ -1,0 +1,144 @@
+# Render Blueprint — Signal Desk personal cloud toolkit
+#
+# This file is the source-controlled, reproducible definition of all six
+# services in the "Shubham's workspace" workspace. The services already exist
+# (created via the Render API/CLI); applying this Blueprint adopts them by name
+# rather than creating duplicates. It is provided so the portfolio can be
+# recreated or audited without relying on dashboard state.
+#
+# Secret values are never stored here. They use `sync: false`, which prompts for
+# the value once in the Render Dashboard on first apply; the value is then kept
+# out of Git. Non-secret build-time values (for example VERT's client-side
+# public flags and BentoPDF's response headers) are included so a rebuild is
+# reproducible.
+#
+# Cost boundary: every service is on the Free plan. The three static tools cost
+# no instance-hours (they run in the browser); Glance and the two image-based
+# web services share the workspace's 750 free instance-hours/month and sleep
+# after ~15 minutes idle.
+
+services:
+  # --- The dashboard itself (existing; listed for a complete definition) ---
+  - type: web
+    name: glance
+    runtime: docker
+    plan: free
+    region: singapore
+    repo: https://github.com/Mr-shubham-kumar/glance
+    branch: main
+    autoDeployTrigger: commit
+    healthCheckPath: /api/healthz
+
+  # --- Client-side static tools: zero instance-hours ---
+  - type: web
+    name: signal-cyberchef
+    runtime: static
+    repo: https://github.com/gchq/CyberChef
+    branch: master
+    buildCommand: npm install && npm run build
+    staticPublishPath: build/prod
+    autoDeployTrigger: off
+
+  - type: web
+    name: signal-bentopdf
+    runtime: static
+    repo: https://github.com/alam00000/bentopdf
+    branch: main
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    autoDeployTrigger: off
+    # BentoPDF's documented static-hosting header set. Cross-origin isolation
+    # enables LibreOffice WASM (SharedArrayBuffer) for Office -> PDF conversion;
+    # jsDelivr serves CORP: cross-origin, so the CDN-hosted WASM engines still load.
+    headers:
+      - path: /*
+        name: Cross-Origin-Opener-Policy
+        value: same-origin
+      - path: /*
+        name: Cross-Origin-Embedder-Policy
+        value: require-corp
+      - path: /*
+        name: Cross-Origin-Resource-Policy
+        value: cross-origin
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+
+  - type: web
+    name: signal-vert
+    runtime: static
+    repo: https://github.com/VERT-sh/VERT
+    branch: main
+    buildCommand: curl -fsSL https://bun.sh/install | bash && export PATH=$HOME/.bun/bin:$PATH && bun install && bun run build
+    staticPublishPath: build
+    autoDeployTrigger: off
+    envVars:
+      # SvelteKit `$env/static/public` values that must exist at build time.
+      # The VERT build fails if any imported PUB_* variable is undefined.
+      - key: PUB_ENV
+        value: production
+      - key: PUB_VERTD_URL
+        value: https://vertd.vert.sh
+      - key: PUB_DISABLE_ALL_EXTERNAL_REQUESTS
+        value: "true"
+      - key: PUB_HOSTNAME
+        value: signal-vert.onrender.com
+      - key: PUB_PLAUSIBLE_URL
+        value: ""
+      - key: PUB_DISABLE_FAILURE_BLOCKS
+        value: "true"
+      - key: PUB_DONATION_URL
+        value: https://donations.vert.sh
+      # Stripe *publishable* key (pk_…): public by design and compiled into the
+      # browser bundle. Not a secret; VERT's build requires it to be defined.
+      - key: PUB_STRIPE_KEY
+        value: pk_live_51TlrPaFTPjkhEGBSu5Kwy5jJQYxcX5yUUHXiH5g7Xzvb0NKzDqbooc126HjlW35uUkfAgQN2ruEoCuyQynoxpKaA00ojFgQ116
+
+  # --- Free web services: sleep when idle, share instance-hours ---
+  - type: web
+    name: signal-rsshub
+    runtime: image
+    image:
+      url: docker.io/diygod/rsshub:latest
+    plan: free
+    region: singapore
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CACHE_TYPE
+        value: memory
+      - key: CACHE_EXPIRE
+        value: "3600"
+      - key: ACCESS_KEY
+        sync: false
+
+  - type: web
+    name: signal-apprise
+    runtime: image
+    image:
+      url: docker.io/caronc/apprise:latest
+    plan: free
+    region: singapore
+    envVars:
+      - key: HTTP_PORT
+        value: "10000"
+      - key: APPRISE_STATEFUL_MODE
+        value: disabled
+      - key: APPRISE_WORKER_COUNT
+        value: "1"
+      - key: APPRISE_AUTH_REQUIRED
+        value: "yes"
+      - key: APPRISE_USER
+        value: signaladmin
+      - key: APPRISE_PASSWORD
+        sync: false
+      - key: APPRISE_ATTACH_SIZE
+        value: "0"
+      - key: APPRISE_DEFAULT_FORMAT
+        value: text
+      - key: STRICT_MODE
+        value: "yes"

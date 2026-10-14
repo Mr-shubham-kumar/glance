@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-14",
+  "generator": "Signal Desk deploy mission (OpenCode / Big Pickle)",
+  "workspace": {
+    "name": "Shubham's workspace",
+    "owner_id": "tea-d2o91975r7bs738js4j0",
+    "project": "LifeOS",
+    "project_id": "prj-da447bm417fc73c0d0jg",
+    "environment_id": "evm-da447bm417fc73c0d0k0",
+    "default_region": "singapore",
+    "dashboard_url": "https://dashboard.render.com/"
+  },
+  "dashboard": {
+    "url": "https://glance-9gmu.onrender.com/",
+    "apps_page": "https://glance-9gmu.onrender.com/apps",
+    "health_endpoint": "https://glance-9gmu.onrender.com/api/healthz",
+    "repo": "https://github.com/Mr-shubham-kumar/glance"
+  },
+  "services": [
+    {
+      "app": "Glance (Signal Desk)",
+      "role": "dashboard",
+      "name": "glance",
+      "service_id": "srv-da447tbncjis73b0shq0",
+      "type": "web_service",
+      "runtime": "docker",
+      "plan": "free",
+      "region": "singapore",
+      "url": "https://glance-9gmu.onrender.com/",
+      "source": {
+        "repo": "https://github.com/Mr-shubham-kumar/glance",
+        "branch": "main",
+        "license": "AGPL-3.0"
+      },
+      "auto_deploy": true,
+      "health_check_path": "/api/healthz",
+      "state": "DONE",
+      "notes": "Existing user dashboard. Serving the new MY APPS page. Docker build from this repo."
+    },
+    {
+      "app": "RSSHub",
+      "role": "intelligence feed generator",
+      "name": "signal-rsshub",
+      "service_id": "srv-db7lfueq1p3s73cu05jg",
+      "type": "web_service",
+      "runtime": "image",
+      "image": "docker.io/diygod/rsshub:latest",
+      "plan": "free",
+      "region": "singapore",
+      "url": "https://signal-rsshub.onrender.com/",
+      "source": {
+        "repo": "https://github.com/DIYgod/RSSHub",
+        "branch": "master",
+        "license": "AGPL-3.0",
+        "pinned": "official image, rolling latest tag"
+      },
+      "auto_deploy": false,
+      "health_check_path": "/",
+      "env_var_keys": ["NODE_ENV", "CACHE_TYPE", "CACHE_EXPIRE", "ACCESS_KEY"],
+      "secret_var_keys": ["ACCESS_KEY"],
+      "state": "DONE",
+      "notes": "Stateless, in-memory cache (no Redis). ACCESS_KEY set to restrict protected routes. Avoid Chromium/Playwright routes on 512 MB."
+    },
+    {
+      "app": "Apprise API",
+      "role": "notification routing endpoint",
+      "name": "signal-apprise",
+      "service_id": "srv-db7lg1mk1f9s7386ahhg",
+      "type": "web_service",
+      "runtime": "image",
+      "image": "docker.io/caronc/apprise:latest",
+      "plan": "free",
+      "region": "singapore",
+      "url": "https://signal-apprise.onrender.com/",
+      "source": {
+        "repo": "https://github.com/caronc/apprise-api",
+        "branch": "master",
+        "license": "MIT",
+        "pinned": "official image, rolling latest tag"
+      },
+      "auto_deploy": false,
+      "auth": "HTTP Basic Auth required (APPRISE_AUTH_REQUIRED=yes)",
+      "env_var_keys": [
+        "HTTP_PORT",
+        "APPRISE_STATEFUL_MODE",
+        "APPRISE_WORKER_COUNT",
+        "APPRISE_AUTH_REQUIRED",
+        "APPRISE_USER",
+        "APPRISE_PASSWORD",
+        "APPRISE_ATTACH_SIZE",
+        "APPRISE_DEFAULT_FORMAT",
+        "STRICT_MODE"
+      ],
+      "secret_var_keys": ["APPRISE_PASSWORD"],
+      "state": "DONE",
+      "notes": "Stateless (no durable config), attachments disabled, one worker, strict mode. Free egress cannot use SMTP; use HTTPS notification channels."
+    },
+    {
+      "app": "BentoPDF",
+      "role": "in-browser PDF workbench",
+      "name": "signal-bentopdf",
+      "service_id": "srv-db7lfid9fdbs73em0bbg",
+      "type": "static_site",
+      "runtime": "static",
+      "plan": "free (static)",
+      "url": "https://signal-bentopdf.onrender.com/",
+      "source": {
+        "repo": "https://github.com/alam00000/bentopdf",
+        "branch": "main",
+        "commit": "872a32929e",
+        "license": "AGPL-3.0 (dual-licensed; commercial option available)"
+      },
+      "auto_deploy": false,
+      "build_command": "npm install && npm run build",
+      "publish_path": "dist",
+      "response_headers": {
+        "Cross-Origin-Opener-Policy": "same-origin",
+        "Cross-Origin-Embedder-Policy": "require-corp",
+        "Cross-Origin-Resource-Policy": "cross-origin",
+        "X-Frame-Options": "SAMEORIGIN",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "state": "DONE",
+      "notes": "Client-side only; files never touch the server. COOP/COEP enable LibreOffice WASM (Office -> PDF). Some advanced engines load from jsDelivr at runtime."
+    },
+    {
+      "app": "CyberChef",
+      "role": "data transformation recipes",
+      "name": "signal-cyberchef",
+      "service_id": "srv-db7lfd49v7es73cftkp0",
+      "type": "static_site",
+      "runtime": "static",
+      "plan": "free (static)",
+      "url": "https://signal-cyberchef.onrender.com/",
+      "source": {
+        "repo": "https://github.com/gchq/CyberChef",
+        "branch": "master",
+        "commit": "9a37a182c0",
+        "license": "Apache-2.0"
+      },
+      "auto_deploy": false,
+      "build_command": "npm install && npm run build",
+      "publish_path": "build/prod",
+      "state": "DONE",
+      "notes": "Client-side only. Keep current: a URL-recipe ReDoS was fixed in v11.3.0 (2026-08)."
+    },
+    {
+      "app": "VERT",
+      "role": "on-device file conversion",
+      "name": "signal-vert",
+      "service_id": "srv-db7lfiavcj2c73e32t9g",
+      "type": "static_site",
+      "runtime": "static",
+      "plan": "free (static)",
+      "url": "https://signal-vert.onrender.com/",
+      "source": {
+        "repo": "https://github.com/VERT-sh/VERT",
+        "branch": "main",
+        "commit": "f5ecdec90d",
+        "license": "AGPL-3.0"
+      },
+      "auto_deploy": false,
+      "build_command": "curl -fsSL https://bun.sh/install | bash && export PATH=$HOME/.bun/bin:$PATH && bun install && bun run build",
+      "publish_path": "build",
+      "build_env_keys": [
+        "PUB_ENV",
+        "PUB_VERTD_URL",
+        "PUB_DISABLE_ALL_EXTERNAL_REQUESTS",
+        "PUB_HOSTNAME",
+        "PUB_PLAUSIBLE_URL",
+        "PUB_DISABLE_FAILURE_BLOCKS",
+        "PUB_DONATION_URL",
+        "PUB_STRIPE_KEY"
+      ],
+      "state": "DONE",
+      "notes": "Client-side conversion. PUB_DISABLE_ALL_EXTERNAL_REQUESTS=true means no vertd calls; vertd-dependent video conversions are intentionally unavailable (per research plan). No secrets in the PUB_* values (all client-side/browser-visible)."
+    }
+  ],
+  "resource_budget": {
+    "workspace_free_hours_per_month": 750,
+    "model": "monthly hours ~= active time + 0.25h x number of isolated wake periods",
+    "static_sites_instance_hours": 0,
+    "assumptions": [
+      "Glance: ~30 min/day single session -> ~15-22.5 instance-hours/month",
+      "RSSHub: wakes during the Glance session for feed fetches; separate isolated activations add a ~15 min tail each",
+      "Apprise: wakes only on notification API calls (personal volume, low)",
+      "No uptime monitor, keep-alive script, or cross-service polling is configured"
+    ],
+    "estimate_hours_per_month": "well under 100 of 750 in realistic use",
+    "build_minutes": "Free static builds consume workspace build-pipeline minutes; static sites are set to not auto-deploy on upstream commits to avoid needless rebuilds"
+  },
+  "security": {
+    "glance": "Public, unauthenticated by design; contains only public URLs and no secrets.",
+    "secrets_management": "App secrets live only in Render env vars (ACCESS_KEY, APPRISE_PASSWORD). Not in Git. See the workspace secret store referenced by the mission.",
+    "static_sites": "No server-side storage; processing is in the visitor's browser.",
+    "apprise_auth": "Basic auth mandatory; verified 401 without credentials.",
+    "service_ids": "Render service IDs are not credentials; they only navigate the owner's authenticated dashboard."
+  },
+  "known_limitations": [
+    "Free web services sleep after ~15 min idle and cold-start in up to ~1 min; a sleeping app is not unhealthy.",
+    "RSSHub routes have widely varying dependencies; heavy routes requiring Chromium/Playwright are not reliable on 512 MB.",
+    "Apprise cannot send email directly (Render blocks outbound SMTP); use HTTPS channels.",
+    "VERT vertd-dependent (server-side) video conversions are disabled by design.",
+    "Free service filesystems are ephemeral; none of these apps store irreplaceable data server-side (correct for Free tier)."
+  ],
+  "recreate": {
+    "blueprint": "render.yaml (repo root) — validated with `render blueprints validate render.yaml` (valid=true).",
+    "secret_env_vars": ["signal-rsshub/ACCESS_KEY", "signal-apprise/APPRISE_PASSWORD"],
+    "steps": [
+      "1. In the target workspace, create a Blueprint from https://github.com/Mr-shubham-kumar/glance (render.yaml at root).",
+      "2. Supply the two sync:false secrets when prompted.",
+      "3. The five external repos build from their upstream branches listed above.",
+      "4. Re-apply BentoPDF response headers if the Blueprint is not used (Render API PUT /v1/services/{id}/headers)."
+    ]
+  }
+}
