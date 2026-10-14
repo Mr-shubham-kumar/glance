@@ -1,0 +1,34 @@
+- type: html
+  title: My toolkit
+  source: |
+    <div class="widget-content widget-content-frame">
+      <p>Five apps I run on the Render free tier, alongside this dashboard. The three browser tools process files on-device and consume <strong>no instance-hours</strong>; RSSHub and Apprise are free web services that sleep when idle.</p>
+      <p class="color-subdue">A sleeping app can take up to a minute to wake on first open. This page only links out — it never polls, so nothing here keeps the services awake.</p>
+    </div>
+- type: bookmarks
+  title: My Apps
+  groups:
+    - title: Convert & transform · in-browser, zero instance-hours
+      links:
+        - title: BentoPDF · private PDF workbench
+          url: https://signal-bentopdf.onrender.com/
+          description: Edit, merge, redact, sign and OCR PDFs locally — files never leave the browser.
+          icon: sh:bentopdf
+        - title: CyberChef · data transformations
+          url: https://signal-cyberchef.onrender.com/
+          description: Composable recipes for encoding, hashing, crypto, compression and time.
+          icon: sh:cyberchef
+        - title: VERT · on-device file conversion
+          url: https://signal-vert.onrender.com/
+          description: Convert images, audio and documents across many formats in the browser.
+          icon: sh:vert
+    - title: Signals & automation · free web services
+      links:
+        - title: RSSHub · feeds for anything
+          url: https://signal-rsshub.onrender.com/
+          description: Turns awkward sites into feeds that Glance and any reader can follow.
+          icon: sh:rsshub
+        - title: Apprise API · one notification endpoint
+          url: https://signal-apprise.onrender.com/
+          description: Routes agent and script notifications downstream. Basic-auth protected.
+          icon: sh:apprise

@@ -1,0 +1,24 @@
+- type: bookmarks
+  title: Render workspace
+  groups:
+    - title: Manage · sign in required
+      hide-arrow: true
+      links:
+        - title: Render dashboard
+          url: https://dashboard.render.com/
+          icon: si:render
+        - title: Glance service · this dashboard
+          url: https://dashboard.render.com/web/srv-da447tbncjis73b0shq0
+    - title: Service dashboards
+      hide-arrow: true
+      links:
+        - title: signal-rsshub · web service
+          url: https://dashboard.render.com/web/srv-db7lfueq1p3s73cu05jg
+        - title: signal-apprise · web service
+          url: https://dashboard.render.com/web/srv-db7lg1mk1f9s7386ahhg
+        - title: signal-bentopdf · static site
+          url: https://dashboard.render.com/static/srv-db7lfid9fdbs73em0bbg
+        - title: signal-cyberchef · static site
+          url: https://dashboard.render.com/static/srv-db7lfd49v7es73cftkp0
+        - title: signal-vert · static site
+          url: https://dashboard.render.com/static/srv-db7lfiavcj2c73e32t9g

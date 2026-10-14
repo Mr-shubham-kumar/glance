@@ -1,0 +1,10 @@
+- name: MY APPS
+  slug: apps
+  width: wide
+  columns:
+    - size: full
+      widgets:
+        - $include: ../widgets/my-apps.yml
+    - size: small
+      widgets:
+        - $include: ../widgets/render-workspace.yml
