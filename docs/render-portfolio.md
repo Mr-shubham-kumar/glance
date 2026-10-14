@@ -92,9 +92,14 @@ The whole portfolio is defined in [`render.yaml`](../render.yaml) at the repo ro
 | `go vet ./...` / `go test ./...` | exit 0 |
 | `scripts/audit-content.py` | 0 cross-page duplicate configured URLs |
 | `render blueprints validate render.yaml` | `valid: true` |
+| Live `GET /api/pages/apps/content/` | HTTP 200, all five app links, 0 widget errors |
+| Live deploy | `dep-db7ls2g473hc73droup0` on commit `052387c`, status `live` |
+
+`audit-content.py --live --smoke` reports the new `apps` page clean but still exits non-zero on two pre-existing conditions unrelated to it: BUILD has no source-authored release descriptions (upstream release timing), and `https://rss.arxiv.org/rss/cs.AI` renders on both `today` and `systems`. MY APPS adds no configured URL or rendered-link collision.
 
 ## Known limitations
 
+- Glance GitHub auto-deploy is currently not firing (no deploy on push since 2026-10-01, commit `511b617`); the service is otherwise correctly configured. Deploys are triggered manually via the Render API until the GitHub App/webhook is reconnected. This affects deploy automation only, not the running service.
 - Free web services sleep after ~15 minutes idle and cold-start in up to ~1 minute; a sleeping app is not unhealthy.
 - RSSHub route reliability varies by upstream; heavy/Chromium routes are not reliable on 512 MB.
 - Apprise cannot email directly (Render blocks outbound SMTP).

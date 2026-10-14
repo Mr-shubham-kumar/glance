@@ -69,6 +69,22 @@ The page is link-only: it never fetches the apps, so it cannot duplicate a feed 
 | `scripts/audit-content.py` | 0 cross-page duplicate configured URLs (exit 0) |
 | `render blueprints validate render.yaml` | `valid: true`, 6 actions |
 
+## Post-deploy (live)
+
+- Pushed the two commits to `origin/main` and triggered a deploy. **The GitHub auto-deploy webhook did not fire**: the service is correctly configured (`autoDeployTrigger: commit`, branch `main`, repo `Mr-shubham-kumar/glance`) but the latest deploy was still `dep-dav3jo7lk1mc73emelq0` / commit `511b617` from 2026-10-01, and the two intervening commits (`080350a`, `4bd7d32`) were never auto-deployed either. A deploy was therefore triggered manually via `POST /v1/services/srv-da447tbncjis73b0shq0/deploys`.
+- Live deploy: `dep-db7ls2g473hc73droup0`, commit `052387c`, status `live`.
+- Live verification of the new page: `GET /api/pages/apps/content/` returned HTTP 200 with all five app links and the Render-workspace widget, 0 `widget-error-header`, 0 partial notices; `/` navigation includes `MY APPS` → `/apps`.
+- Minimum action to restore auto-deploy: reauthorize/reconnect the Render GitHub App for `Mr-shubham-kumar/glance` (or re-save the service's repository connection) so the push webhook is re-established. Until then, deploys are manual via the API. This affects only deploy automation, not the running service.
+
+## Pre-existing audit findings (not caused by this change)
+
+`scripts/audit-content.py --live --smoke` reports the new `apps` page as clean but exits non-zero for two conditions that predate this work and involve no MY APPS widget:
+
+- `build`: "no source-authored release descriptions" — the current upstream releases carry no source-authored notes (feed-content timing), unrelated to the added page.
+- `Rendered links`: one cross-page duplicate, `https://rss.arxiv.org/rss/cs.AI` on `[systems, today]` — an overlap between the existing intelligence cards, not introduced by MY APPS (the page renders only `signal-*` links, and its Render dashboard links are excluded by the audit).
+
+MY APPS adds no configured URL and no rendered-link collision, so it is a neutral addition to the audit.
+
 ## Artifacts produced
 
 - `render.yaml` — Blueprint for all six services (secrets `sync: false`).
