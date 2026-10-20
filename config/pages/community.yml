@@ -4,7 +4,6 @@
   columns:
     - size: full
       widgets:
-        - $include: ../widgets/research-queue.yml
         - $include: ../widgets/community-reddit.yml
         - $include: ../widgets/community-links.yml
     - size: full

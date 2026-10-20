@@ -1,0 +1,26 @@
+- type: rss
+  title: Security · advisories & research
+  title-url: https://www.cisa.gov/news-events/cybersecurity-advisories
+  cache: 2h
+  limit: 5
+  collapse-after: 5
+  single-line-titles: true
+  feeds:
+    # RSSHub-generated: Cybercrime Magazine has no first-party feed.
+    - url: https://signal-rsshub.onrender.com/cybersecurityventures/news?key=${RSSHUB_ACCESS_KEY}
+      title: Cybercrime Magazine
+      limit: 1
+    # RSSHub-generated: public HackerOne disclosure activity.
+    - url: https://signal-rsshub.onrender.com/hackerone/hacktivity?key=${RSSHUB_ACCESS_KEY}
+      title: HackerOne activity
+      limit: 1
+    # First-party feeds used directly (no RSSHub needed).
+    - url: https://www.bleepingcomputer.com/feed/
+      title: BleepingComputer
+      limit: 1
+    - url: https://feeds.feedburner.com/TheHackersNews
+      title: The Hacker News
+      limit: 1
+    - url: https://www.cisa.gov/cybersecurity-advisories/all.xml
+      title: CISA advisories
+      limit: 1

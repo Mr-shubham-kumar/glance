@@ -1,5 +1,7 @@
 # Content ownership · Signal Desk
 
+v6 (2026-10-14): RADAR now also owns cybersecurity advisories and disclosure activity, and BUILD also owns cloud-provider engineering. These close two content classes that had no home. Cybersecurity uses two RSSHub-generated feeds (Cybercrime Magazine, HackerOne activity) plus three first-party feeds (BleepingComputer, The Hacker News, CISA advisories); cloud uses four first-party provider feeds (AWS, Google Cloud, Azure, Cloudflare). Glance reaches RSSHub through `?key=${RSSHUB_ACCESS_KEY}`: the access key lives only in Render environment variables (`glance/RSSHUB_ACCESS_KEY`, matching `signal-rsshub/ACCESS_KEY`), never in Git and never in the rendered page.
+
 v5 redesign: TODAY adds a browser-local three-line focus board and a Discover-style news grid for world, India, business, and science. The board uses this browser's local storage; it is not a server-side task store. News cards display publisher headlines and excerpts with source links. These four feeds do not duplicate the deeper pages' feeds. As of 2026-10-07 the news grid lives on the DISCOVERY page beside the Perplexity Discover feed, and TODAY keeps only a link card to it.
 
 v4: COMMUNITY is the canonical home for Reddit community links and Substack essays. TODAY has a date/time-only clock and bookmark-style authenticated account links; the forecast was removed at the user's request. GITHUB has four explicit official category destinations and a separately labeled unofficial RSS feed; article links still lead to repositories. Reddit RSS was tried in production: it succeeded once, then returned 429 from Render's shared egress after a deploy, so the live feed is PARKED and only direct Reddit links remain. No proxy or stale copied posts.
@@ -10,8 +12,8 @@ Real-use feedback (2026-09-25): five pages repeatedly displayed the same source 
 |---|---|---|
 | TODAY | Date/search, browser-local focus, the three-line intelligence brief from the public snapshot, compact deployment summary, markets, navigation | Releases, HN, lab news, the world/business/science news grid |
 | DISCOVERY | Perplexity Discover picks and world/India/business/science news feeds | Releases, lab research, community discussion |
-| RADAR | Primary lab news, research preprints, HN/Lobsters discussion, evidence-backed intelligence items | GitHub trending, releases, essays |
-| BUILD | Source-authored release-note excerpts, changelogs, release-to-experiment matches, experiment links | Trending ranking, lab news |
+| RADAR | Primary lab news, research preprints, HN/Lobsters discussion, cybersecurity advisories and disclosure activity, evidence-backed intelligence items | GitHub trending, releases, essays |
+| BUILD | Source-authored release-note excerpts, changelogs, cloud-provider engineering, release-to-experiment matches, experiment links | Trending ranking, lab news |
 | GITHUB | Unofficial trending repository discovery and public project links | Release-note cards |
 | SYSTEMS | The actual Render Glance container, live service reachability, provider incident context, the source-health ledger and free-tier review alerts | General infrastructure news |
 | EXPLORE | Video demonstrations and long-form independent technical essays | Lab news, engineering changelogs |

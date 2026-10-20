@@ -10,4 +10,5 @@
     - size: full
       widgets:
         - $include: ../widgets/build-notes.yml
+        - $include: ../widgets/cloud-watch.yml
         - $include: ../widgets/experiment-links.yml

@@ -12,3 +12,4 @@
       widgets:
         - $include: ../widgets/radar-community.yml
         - $include: ../widgets/radar-lobsters.yml
+        - $include: ../widgets/security-watch.yml

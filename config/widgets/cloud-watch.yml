@@ -1,0 +1,20 @@
+- type: rss
+  title: Cloud · provider engineering
+  cache: 3h
+  limit: 4
+  collapse-after: 4
+  single-line-titles: true
+  feeds:
+    # First-party cloud provider feeds used directly; RSSHub adds no value here.
+    - url: https://aws.amazon.com/blogs/aws/feed/
+      title: AWS News Blog
+      limit: 1
+    - url: https://cloudblog.withgoogle.com/rss/
+      title: Google Cloud
+      limit: 1
+    - url: https://azure.microsoft.com/en-us/blog/feed/
+      title: Azure blog
+      limit: 1
+    - url: https://blog.cloudflare.com/rss/
+      title: Cloudflare blog
+      limit: 1

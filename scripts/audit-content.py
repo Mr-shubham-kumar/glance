@@ -56,6 +56,19 @@ for page in PAGES:
         for url in url_pattern.findall(body):
             feeds[url].add(page.stem)
 failures = report('Configured URLs', feeds)
+
+# Widget includes are also a content-ownership surface: the same interactive widget
+# should not be embedded on several pages.
+widgets = defaultdict(set)
+for page in PAGES:
+    text = page.read_text(encoding='utf-8')
+    for widget in re.findall(r'\$include: \.\./widgets/(\S+)', text):
+        widgets[widget].add(page.stem)
+widget_duplicates = {w: p for w, p in widgets.items() if len(p) > 1}
+print(f'Widget includes: {len(widgets)} unique widgets; {len(widget_duplicates)} cross-page duplicates')
+for widget, pages in sorted(widget_duplicates.items()):
+    print(f'  {widget}  [{", ".join(sorted(pages))}]')
+failures += len(widget_duplicates)
 if '--live' in sys.argv or '--local' in sys.argv:
     base = 'http://127.0.0.1:8080' if '--local' in sys.argv else 'https://glance-9gmu.onrender.com'
     rendered = defaultdict(set)

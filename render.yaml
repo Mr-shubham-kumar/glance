@@ -28,6 +28,13 @@ services:
     branch: main
     autoDeployTrigger: commit
     healthCheckPath: /api/healthz
+    envVars:
+      # Same secret as signal-rsshub/ACCESS_KEY. Glance appends it to RSSHub feed
+      # URLs as `?key=${RSSHUB_ACCESS_KEY}` so the key stays out of Git and out of
+      # the browser. If unset, Glance fails to start (documented env-substitution
+      # behaviour), so set this before deploying the config that references it.
+      - key: RSSHUB_ACCESS_KEY
+        sync: false
 
   # --- Client-side static tools: zero instance-hours ---
   - type: web
